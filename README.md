@@ -34,17 +34,17 @@ Supports Pakistan’s dairy industry with a multilingual interface and real-time
 
 
 
-![Login form Output](C:/Users/PMLS/Desktop/Final Year Project/login.png)
-![Signup form Output](C:/Users/PMLS/Desktop/Final Year Project/sign.png)
-![Base form Output](C:/Users/PMLS/Desktop/Final Year Project/base.png)
-![Dashbaord form Output](C:/Users/PMLS/Desktop/Final Year Project/dashboard.png)
-![Reports form Output](C:/Users/PMLS/Desktop/Final Year Project/reports.png)
-![User1 form Output](C:/Users/PMLS/Desktop/Final Year Project/user1.png)
-![User2 form Output](C:/Users/PMLS/Desktop/Final Year Project/user2.png)
-![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
-![help1 form Output](C:/Users/PMLS/Desktop/Final Year Project/help1.png)
-![help2 form Output](C:/Users/PMLS/Desktop/Final Year Project/help2.png)
-![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
-![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
+![Login form Output](images/login.png)
+![Signup form Output](images/sign.png)
+![Base form Output](images/base.png)
+![Dashbaord form Output](images/dashboard.png)
+![Reports form Output](images/reports.png)
+![User1 form Output](images/user1.png)
+![User2 form Output](images/user2.png)
+![setting form Output](images/setting.png)
+![help1 form Output](images/help1.png)
+![help2 form Output](images/help2.png)
+![setting form Output](images/setting.png)
+![setting form Output](images/setting.png)
 
 

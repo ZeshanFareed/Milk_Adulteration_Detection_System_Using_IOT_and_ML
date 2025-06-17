@@ -55,6 +55,14 @@ Supports Pakistan’s dairy industry with a multilingual interface and real-time
 ![help2 form Output](images/help2.png)
 # **Setting Form Change in Urdu Page** 
 ![urdu form Output](images/setting_in_urdu.png)
+# **Firebase** 
+![Firebase Output](images/Firebase.png)
+# **Firebase Prediction data** 
+![prediction Output](images/prediction.png)
+# **Firebase Sesnor data** 
+![sensor Output](images/senspor.png)
+# **Firebase user data** 
+![user Output](images/userrr.png)
 
 
 

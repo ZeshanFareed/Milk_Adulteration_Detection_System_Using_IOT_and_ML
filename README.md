@@ -33,18 +33,26 @@ Supports Pakistan’s dairy industry with a multilingual interface and real-time
 
 
 
-
+# **Login Form Page** 
 ![Login form Output](images/login.png)
+# **Signup Form Page** 
 ![Signup form Output](images/sign.png)
+# **Base Form Page** 
 ![Base form Output](images/base.png)
+# **Dashboard Form Page** 
 ![Dashbaord form Output](images/dashboard.png)
+# **Report Form Page** 
 ![Reports form Output](images/reports.png)
+# **User Form Page** 
 ![User1 form Output](images/user1.png)
+# **User Form Page** 
 ![User2 form Output](images/user2.png)
+# **Setting Form Page** 
 ![setting form Output](images/setting.png)
+# **Help Form Page** 
 ![help1 form Output](images/help1.png)
+# **Help Form Page** 
 ![help2 form Output](images/help2.png)
-![setting form Output](images/setting.png)
-![setting form Output](images/setting.png)
+
 
 

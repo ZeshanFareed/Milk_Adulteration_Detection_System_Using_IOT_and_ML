@@ -17,7 +17,7 @@ Integrates Firebase Realtime Database for data storage and Firebase Authenticati
 ## Dynamic Visualizations:
 Displays live sensor trends and prediction outcomes using Chart.js, with Bootstrap 5 for a responsive, user-friendly design.
 # **Technologies Used**
-## **Hardware: **
+## **Hardware:**
 pH Sensor, Temperature Sensor, Gas Sensor, Lactoscanner S60, ESP32 Microcontroller, Arduino Uno.
 ## **Software:** 
 Python 3.8+, Django 5.0, Firebase (Realtime Database, Authentication), Chart.js, Bootstrap 5, Jupyter Notebook.

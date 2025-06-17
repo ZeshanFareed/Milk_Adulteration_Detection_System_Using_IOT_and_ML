@@ -1,0 +1,445 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load utils_tags %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .card {
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+    .card-header {
+        border-radius: 10px 10px 0 0;
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        color: white;
+    }
+    .filter-form .form-control {
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+        transition: border-color 0.2s;
+    }
+    .filter-form .form-control:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+    .filter-form .is-invalid {
+        border-color: #dc3545;
+    }
+    .invalid-feedback {
+        color: #dc3545;
+        font-size: 0.875rem;
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        border: none;
+        border-radius: 5px;
+        padding: 10px 20px;
+        transition: background 0.3s;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #0099cc);
+    }
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table th {
+        background-color: #e9ecef;
+        color: #343a40;
+    }
+    .progress {
+        background-color: #e9ecef;
+        border-radius: 5px;
+    }
+    .progress-bar {
+        background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    }
+    .download-btn {
+        font-size: 0.9rem;
+        padding: 8px 16px;
+    }
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    .alert {
+        border-radius: 5px;
+    }
+    .loading-spinner {
+        display: none;
+        text-align: center;
+        padding: 10px;
+    }
+    .loading-spinner i {
+        color: #007bff;
+        font-size: 1.5rem;
+    }
+    @media (max-width: 768px) {
+        .filter-form .col-12 {
+            margin-bottom: 15px;
+        }
+        .download-btn {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    }
+</style>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header py-3">
+                    <h5 class="mb-0"><i class="fas fa-flask me-2"></i>{% trans "Milk Analysis Report" %}</h5>
+                    <p class="mb-0">
+                        {% blocktrans with count=predictions|length %}
+                        Latest milk adulteration analysis results (Total: {{ count }})
+                        {% endblocktrans %}
+                    </p>
+                </div>
+                <div class="card-body">
+                    <!-- Display Messages -->
+                    {% if messages %}
+                    <div class="mb-4" id="messages-container">
+                        {% for message in messages %}
+                        <div class="alert alert-{% if message.tags == 'error' %}danger{% elif message.tags == 'warning' %}warning{% else %}success{% endif %}">
+                            {{ message }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% else %}
+                    <div class="mb-4" id="messages-container"></div>
+                    {% endif %}
+
+                    <!-- Filter Form -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-filter me-2"></i>{% trans "Filter Report" %}</h6>
+                        </div>
+                        <div class="card-body">
+                            <form method="get" class="filter-form row g-3" id="filter-form">
+                                <div class="col-12 col-md-4">
+                                    <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }}</label>
+                                    {{ form.start_date }}
+                                    {% if form.start_date.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.start_date.errors.as_text }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }}</label>
+                                    {{ form.end_date }}
+                                    {% if form.end_date.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.end_date.errors.as_text }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12 col-md-4">
+                                    <label for="{{ form.search_query.id_for_label }}" class="form-label">{{ form.search_query.label }}</label>
+                                    {{ form.search_query }}
+                                    {% if form.search_query.errors %}
+                                    <div class="invalid-feedback">
+                                        {{ form.search_query.errors.as_text }}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-12 col-md-3 d-flex align-items-end">
+                                    <button type="submit" class="btn btn-primary w-100"><i class="fas fa-check me-2"></i>{% trans "Apply Date Filter" %}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Predictions Table -->
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-table me-2"></i>{% trans "Prediction History" %}</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="loading-spinner" id="loading-spinner">
+                                <i class="fas fa-spinner fa-spin"></i> {% trans "Loading..." %}
+                            </div>
+                            <div class="table-responsive table-container">
+                                <table class="table table-hover" id="predictions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>{% trans "Timestamp" %}</th>
+                                            {% for feature in features %}
+                                            <th>{{ feature }}</th>
+                                            {% endfor %}
+                                            <th>{% trans "Prediction" %}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="predictions-tbody">
+                                        {% for pred in predictions %}
+                                        <tr>
+                                            <td>{{ pred.timestamp }}</td>
+                                            {% for feature in features %}
+                                            <td>{{ pred.sensor_values|get_item:feature|floatformat:2 }}</td>
+                                            {% endfor %}
+                                            <td>
+                                                <span class="badge bg-{% if pred.prediction == 'Pure Milk' %}success{% else %}danger{% endif %}">
+                                                    {% if pred.prediction == 'Pure Milk' %}
+                                                        {% trans "Pure Milk" %}
+                                                    {% else %}
+                                                        {{ pred.prediction }}
+                                                    {% endif %}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="{{ features|length|add:2 }}" class="text-center">{% trans "No predictions available." %}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Factors for Latest Prediction -->
+                    {% if predictions %}
+                    <div class="card mb-4" id="key-factors">
+                        <div class="card-header">
+                            <h6 class="mb-0"><i class="fas fa-lightbulb me-2"></i>{% trans "Key Factors (Latest Prediction)" %}</h6>
+                        </div>
+                        <div class="card-body">
+                            <p>
+                                {% blocktrans with prediction=predictions.0.prediction %}
+                                These parameters had the most significant impact on the latest prediction ({{ prediction }}):
+                                {% endblocktrans %}
+                            </p>
+                            <div class="row">
+                                {% for feature, value in predictions.0.shap_values|dictsortreversed:"1"|slice:":5" %}
+                                <div class="col-12 col-md-4 mb-3">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <h6 class="card-title">{{ feature }}</h6>
+                                            <div class="progress" style="height: 10px;">
+                                                <div class="progress-bar" style="width: {{ value|mul:100 }}%"></div>
+                                            </div>
+                                            <small class="text-muted">
+                                                {% blocktrans with impact=value|floatformat:2 %}
+                                                Impact: {{ impact }}
+                                                {% endblocktrans %}
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="col-12">
+                                    <p>{% trans "No key factors available." %}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="card-footer text-end">
+                    <a href="{% url 'current_report' %}?format=pdf&start_date={{ form.start_date.value|default:'' }}&end_date={{ form.end_date.value|default:'' }}&search_query={{ form.search_query.value|default:'' }}"
+                       class="btn btn-primary download-btn me-2">
+                        <i class="fas fa-file-pdf me-2"></i>{% trans "Download PDF" %}
+                    </a>
+                    <a href="{% url 'current_report' %}?format=csv&start_date={{ form.start_date.value|default:'' }}&end_date={{ form.end_date.value|default:'' }}&search_query={{ form.search_query.value|default:'' }}"
+                       class="btn btn-success download-btn">
+                        <i class="fas fa-file-csv me-2"></i>{% trans "Download CSV" %}
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Load Django's JavaScript translation catalog
+    django.catalog = django.catalog || {};
+    django.gettext = function(msgid) { return django.catalog[msgid] || msgid; };
+
+    // Debounce function to limit AJAX calls
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Function to perform live search
+    const performSearch = debounce(function(searchQuery, startDate, endDate) {
+        const $spinner = $('#loading-spinner');
+        const $tbody = $('#predictions-tbody');
+        const $messagesContainer = $('#messages-container');
+        const $predictionsCount = $('#predictions-count');
+        const $keyFactors = $('#key-factors');
+
+        // Show loading spinner
+        $spinner.show();
+
+        // Construct URL with query parameters
+        const url = new URL('{% url "current_report" %}', window.location.origin);
+        if (searchQuery) url.searchParams.append('search_query', searchQuery);
+        if (startDate) url.searchParams.append('start_date', startDate);
+        if (endDate) url.searchParams.append('end_date', endDate);
+
+        $.ajax({
+            url: url.toString(),
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest' // Indicate AJAX request
+            },
+            success: function(data) {
+                // Hide spinner
+                $spinner.hide();
+
+                // Update predictions count
+                $predictionsCount.text(data.predictions.length);
+
+                // Update messages
+                $messagesContainer.empty();
+                if (data.messages && data.messages.length > 0) {
+                    data.messages.forEach(message => {
+                        $messagesContainer.append(
+                            `<div class="alert alert-${message.tags}">${message.message}</div>`
+                        );
+                    });
+                }
+
+                // Update predictions table with fade effect
+                $tbody.empty();
+                if (data.predictions.length === 0) {
+                    $tbody.append(
+                        `<tr><td colspan="${data.features.length + 2}" class="text-center">${django.gettext('No predictions available.')}</td></tr>`
+                    );
+                } else {
+                    data.predictions.forEach((pred, index) => {
+                        const $row = $('<tr>').css('opacity', 0);
+                        let rowHTML = `<td>${pred.timestamp}</td>`;
+                        data.features.forEach(feature => {
+                            const value = pred.sensor_values[feature] !== undefined ? Number(pred.sensor_values[feature]).toFixed(2) : '0.00';
+                            rowHTML += `<td>${value}</td>`;
+                        });
+                        const badgeClass = pred.prediction === 'Pure Milk' ? 'success' : 'danger';
+                        const predictionText = pred.prediction === 'Pure Milk' ? django.gettext('Pure Milk') : pred.prediction;
+                        rowHTML += `<td><span class="badge bg-${badgeClass}">${predictionText}</span></td>`;
+                        $row.html(rowHTML);
+                        $tbody.append($row);
+                        $row.delay(index * 50).animate({ opacity: 1 }, 300); // Fade in each row
+                    });
+                }
+
+                // Update key factors section
+                if (data.predictions.length > 0 && data.predictions[0].shap_values) {
+                    $keyFactors.show();
+                    const predictionMessage = django.gettext('These parameters had the most significant impact on the latest prediction ({{ prediction }}):').replace('{{ prediction }}', data.predictions[0].prediction);
+                    $keyFactors.find('.card-body p').text(predictionMessage);
+                    const $shapContainer = $keyFactors.find('.card-body .row');
+                    $shapContainer.empty();
+                    const shapValues = Object.entries(data.predictions[0].shap_values)
+                        .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]))
+                        .slice(0, 5);
+                    shapValues.forEach(([feature, value]) => {
+                        const $div = $(`
+                            <div class="col-12 col-md-4 mb-3">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <h6 class="card-title">${feature}</h6>
+                                        <div class="progress" style="height: 10px;">
+                                            <div class="progress-bar" style="width: ${value * 100}%"></div>
+                                        </div>
+                                        <small class="text-muted">${django.gettext('Impact: ') + Number(value).toFixed(2)}</small>
+                                    </div>
+                                </div>
+                            </div>
+                        `).css('opacity', 0);
+                        $shapContainer.append($div);
+                        $div.animate({ opacity: 1 }, 300); // Fade in each factor
+                    });
+                } else {
+                    $keyFactors.hide();
+                }
+            },
+            error: function(error) {
+                $spinner.hide();
+                $messagesContainer.empty().append(
+                    `<div class="alert alert-danger">${django.gettext('Error loading predictions. Please try again.')}</div>`
+                );
+                console.error('Error:', error);
+            }
+        });
+    }, 150); // Short debounce for responsive feel, matching users.html
+
+    // Function to trigger search based on input changes
+    function triggerSearch() {
+        const searchQuery = $('#id_search_query').val().trim();
+        const startDate = $('#id_start_date').val();
+        const endDate = $('#id_end_date').val();
+
+        // Validate dates before triggering search
+        if (startDate && endDate && new Date(endDate) < new Date(startDate)) {
+            $('#id_end_date').addClass('is-invalid');
+            const $errorDiv = $('#id_end_date').next('.invalid-feedback').length ? $('#id_end_date').next('.invalid-feedback') : $('<div class="invalid-feedback">').text(django.gettext('End date cannot be before start date.'));
+            $('#id_end_date').after($errorDiv);
+            return;
+        } else {
+            $('#id_end_date').removeClass('is-invalid');
+            $('#id_end_date').next('.invalid-feedback').remove();
+        }
+
+        performSearch(searchQuery, startDate, endDate);
+    }
+
+    // Event listeners for live search, mimicking users.html
+    $('#id_search_query').on('input', triggerSearch);
+    $('#id_start_date, #id_end_date').on('change', triggerSearch);
+
+    // Prevent default form submission and trigger search instead
+    $('#filter-form').on('submit', function(e) {
+        e.preventDefault();
+        triggerSearch();
+    });
+
+    // Client-side validation feedback for all inputs
+    $('.form-control').on('invalid', function() {
+        $(this).addClass('is-invalid');
+    }).on('input change', function() {
+        $(this).removeClass('is-invalid');
+        $(this).next('.invalid-feedback').remove();
+    });
+
+    // Animate form inputs on focus, similar to users.html
+    $('.form-control').on('focus', function() {
+        $(this).parent().css({
+            'transform': 'scale(1.02)',
+            'box-shadow': '0 0 8px rgba(59, 130, 246, 0.2)'
+        });
+    }).on('blur', function() {
+        $(this).parent().css({
+            'transform': 'scale(1)',
+            'box-shadow': 'none'
+        });
+    });
+
+    // Trigger initial search on page load to apply any existing query parameters
+    $(window).on('load', triggerSearch);
+</script>
+{% endblock %}

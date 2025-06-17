@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% load utils_tags %}
+  
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(180deg, #e5e7eb 0%, #f9fafb 100%);
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #1f2937;
+        min-height: 100vh;
+    }
+    .container-fluid {
+        padding: 1.5rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 0.6s ease-out;
+    }
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+    .card-header {
+        border-radius: 16px 16px 0 0;
+        padding: 1.25rem 1.5rem;
+        transition: background 0.3s ease;
+    }
+    .bg-gradient-primary {
+        background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+    }
+    .card-body {
+        padding: 1.75rem;
+    }
+    .form-control {
+        border-radius: 10px;
+        padding: 0.75rem 1.25rem;
+        border: 1px solid #d1d5db;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+    }
+    .form-control:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+        transform: scale(1.02);
+    }
+    .input-group .btn {
+        border-radius: 0 10px 10px 0;
+        background: #e5e7eb;
+        border: 1px solid #d1d5db;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    .input-group .btn:hover {
+        background: #3b82f6;
+        color: white;
+        transform: translateY(-2px);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.75rem;
+        font-weight: 500;
+        transition: background 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    }
+    .btn-outline-secondary {
+        border-radius: 10px;
+        border: 1px solid #9ca3af;
+        color: #374151;
+        padding: 0.75rem 1.75rem;
+        transition: background 0.3s ease, transform 0.2s ease, border-color 0.2s ease;
+    }
+    .btn-outline-secondary:hover {
+        background: #f3f4f6;
+        border-color: #3b82f6;
+        transform: translateY(-3px);
+    }
+    .card-role .form-check-input {
+        position: absolute;
+        opacity: 0;
+    }
+    .card-role .card {
+        background: rgba(255, 255, 255, 0.9);
+        backdrop-filter: blur(8px);
+        cursor: pointer;
+        transition: transform 0.3s ease, border 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card-role .form-check-input:checked + label .card {
+        border: 3px solid #3b82f6;
+        background: #eff6ff;
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+    }
+    .card-role .card:hover {
+        transform: translateY(-6px) scale(1.02);
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.15);
+    }
+    .card-role i {
+        transition: transform 0.3s ease;
+    }
+    .card-role .card:hover i {
+        transform: scale(1.2);
+    }
+    .user-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 1.25rem;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 0.5s ease-out;
+    }
+    .user-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .avatar-initial {
+        width: 56px;
+        height: 56px;
+        font-size: 1.5rem;
+        font-weight: 600;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .avatar-initial:hover {
+        transform: scale(1.15);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 500;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .badge:hover {
+        transform: scale(1.1);
+    }
+    .action-btn {
+        border-radius: 8px;
+        padding: 0.5rem;
+        transition: background-color 0.2s ease, transform 0.2s ease;
+    }
+    .action-btn:hover {
+        transform: translateY(-2px);
+    }
+    .action-btn.btn-outline-primary i.fa-edit {
+        color: #3b82f6;
+    }
+    .action-btn.btn-outline-danger i.fa-trash-alt {
+        color: #dc3545;
+    }
+    .action-btn:hover i {
+        filter: brightness(1.2);
+    }
+    .filter-bar {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        transition: box-shadow 0.3s ease;
+    }
+    .filter-bar:hover {
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    }
+    .form-select {
+        border-radius: 10px;
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .form-select:focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+    .password-strength {
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .password-strength.show {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .invalid-feedback {
+        opacity: 0;
+        transform: translateY(4px);
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .was-validated .invalid-feedback {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    .collapse:not(.show) {
+        display: none;
+    }
+    .collapsing {
+        transition: height 0.4s ease;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(24px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @media (max-width: 992px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+        .row > div {
+            margin-bottom: 1.25rem;
+        }
+        .card-role .card {
+            margin-bottom: 1rem;
+        }
+        .user-card {
+            margin-bottom: 1.25rem;
+        }
+    }
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 0.75rem;
+        }
+        .card {
+            margin-bottom: 1.5rem;
+        }
+        .card-body {
+            padding: 1.25rem;
+        }
+        .form-control, .form-select {
+            padding: 0.65rem 1rem;
+            font-size: 0.95rem;
+        }
+        .btn-primary, .btn-outline-secondary {
+            width: 100%;
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+        }
+        .d-flex.justify-content-end {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        .user-card {
+            padding: 1rem;
+        }
+        .avatar-initial {
+            width: 48px;
+            height: 48px;
+            font-size: 1.25rem;
+        }
+        .filter-bar {
+            padding: 0.75rem;
+        }
+    }
+    @media (max-width: 576px) {
+        .card-header h5, .card-header h6 {
+            font-size: 1.1rem;
+        }
+        .user-card h6 {
+            font-size: 0.95rem;
+        }
+        .user-card small, .user-card p {
+            font-size: 0.85rem;
+        }
+        .badge {
+            font-size: 0.75rem;
+            padding: 0.4rem 0.8rem;
+        }
+        .action-btn {
+            padding: 0.4rem;
+            font-size: 0.85rem;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0">
+                <div class="card-header bg-gradient-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">
+                            <i class="fas fa-users-cog me-2"></i>
+                            {% if editing_user %}{% trans "Edit User" %}{% else %}{% trans "User Management" %}{% endif %}
+                        </h5>
+                        <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#userFormCollapse">
+                            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="card-body">
+                    <!-- User Form (Collapsible) -->
+                    <div class="collapse show" id="userFormCollapse">
+                        <div class="card mb-4 border-0">
+                            <div class="card-body">
+                                <form method="post" class="needs-validation" novalidate>
+                                    {% csrf_token %}
+                                    
+                                    <div class="row g-4">
+                                        <!-- Email Field -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label for="email" class="form-label fw-semibold text-gray-700">{% trans "Email Address" %}</label>
+                                                <input type="email" class="form-control" id="email" name="email" required
+                                                       value="{% if editing_user %}{{ editing_user.email }}{% endif %}">
+                                                <div class="invalid-feedback text-red-600">
+                                                    {% trans "Please provide a valid email." %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Password Field -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label for="password" class="form-label fw-semibold text-gray-700">{% trans "Password" %}</label>
+                                                <div class="input-group">
+                                                    <input type="password" class="form-control" id="password" name="password"
+                                                           {% if not editing_user %}required{% endif %}>
+                                                    <button class="btn toggle-password" type="button">
+                                                        <i class="fas fa-eye"></i>
+                                                    </button>
+                                                </div>
+                                                <div class="invalid-feedback text-red-600">
+                                                    {% trans "Password is required." %}
+                                                </div>
+                                                <small class="form-text text-gray-500">
+                                                    {% trans "At least 8 characters with numbers and symbols" %}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Confirm Password Field -->
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group">
+                                                <label for="confirm_password" class="form-label fw-semibold text-gray-700">{% trans "Confirm Password" %}</label>
+                                                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                                                       {% if not editing_user %}required{% endif %}>
+                                                <div class="invalid-feedback text-red-600">
+                                                    {% trans "Passwords must match." %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Role Selection -->
+                                        <div class="col-12">
+                                            <div class="card border-0">
+                                                <div class="card-header bg-gray-50">
+                                                    <h6 class="mb-0 fw-semibold"><i class="fas fa-user-tag me-2"></i>{% trans "User Role" %}</h6>
+                                                </div>
+                                                <div class="card-body">
+                                                    <div class="row g-4">
+                                                        <div class="col-12 col-md-4">
+                                                            <div class="form-check card-role">
+                                                                <input class="form-check-input" type="radio" 
+                                                                       name="role" id="role_admin" value="admin"
+                                                                       {% if editing_user and editing_user.role == 'admin' %}checked{% endif %}>
+                                                                <label class="form-check-label w-100" for="role_admin">
+                                                                    <div class="card border-0 h-100">
+                                                                        <div class="card-body text-center">
+                                                                            <i class="fas fa-crown text-yellow-400 mb-4 text-4xl"></i>
+                                                                            <h5 class="text-gray-800 font-semibold">{% trans "Administrator" %}</h5>
+                                                                            <p class="text-gray-500 text-sm">{% trans "Full system access" %}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <div class="form-check card-role">
+                                                                <input class="form-check-input" type="radio" 
+                                                                       name="role" id="role_qc" value="qc"
+                                                                       {% if editing_user and editing_user.role == 'qc' %}checked{% endif %}>
+                                                                <label class="form-check-label w-100" for="role_qc">
+                                                                    <div class="card border-0 h-100">
+                                                                        <div class="card-body text-center">
+                                                                            <i class="fas fa-clipboard-check text-blue-400 mb-4 text-4xl"></i>
+                                                                            <h5 class="text-gray-800 font-semibold">{% trans "Quality Control" %}</h5>
+                                                                            <p class="text-gray-500 text-sm">{% trans "Testing and reporting" %}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12 col-md-4">
+                                                            <div class="form-check card-role">
+                                                                <input class="form-check-input" type="radio" 
+                                                                       name="role" id="role_user" value="user"
+                                                                       {% if editing_user and editing_user.role == 'user' %}checked{% endif %}>
+                                                                <label class="form-check-label w-100" for="role_user">
+                                                                    <div class="card border-0 h-100">
+                                                                        <div class="card-body text-center">
+                                                                            <i class="fas fa-user text-green-400 mb-4 text-4xl"></i>
+                                                                            <h5 class="text-gray-800 font-semibold">{% trans "Regular User" %}</h5>
+                                                                            <p class="text-gray-500 text-sm">{% trans "Basic dashboard access" %}</p>
+                                                                        </div>
+                                                                    </div>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-flex justify-content-end mt-5 space-x-4">
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>
+                                            {% if editing_user %}{% trans "Update User" %}{% else %}{% trans "Create User" %}{% endif %}
+                                        </button>
+                                        {% if editing_user %}
+                                            <a href="{% url 'user_management' %}" class="btn btn-outline-secondary">
+                                                <i class="fas fa-times me-2"></i>{% trans "Cancel" %}
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- System Users -->
+                    <div class="card border-0">
+                        <div class="card-header bg-gray-50 d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0 fw-semibold"><i class="fas fa-users me-2"></i>{% trans "System Users" %}</h5>
+                            <button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#filterCollapse">
+                                <i class="fas fa-filter"></i>
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <!-- Filter Bar -->
+                            <div class="collapse show" id="filterCollapse">
+                                <div class="filter-bar">
+                                    <div class="row g-3">
+                                        <div class="col-12 col-md-4">
+                                            <input type="text" id="searchUsers" class="form-control" placeholder="{% trans "Search by email..." %}">
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <select id="filterRole" class="form-select">
+                                                <option value="">{% trans "All Roles" %}</option>
+                                                <option value="admin">{% trans "Administrator" %}</option>
+                                                <option value="qc">{% trans "Quality Control" %}</option>
+                                                <option value="user">{% trans "Regular User" %}</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-12 col-md-4">
+                                            <select id="filterStatus" class="form-select">
+                                                <option value="">{% trans "All Statuses" %}</option>
+                                                <option value="active">{% trans "Active" %}</option>
+                                                <option value="inactive">{% trans "Inactive" %}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- User Cards -->
+                            <div class="row g-4 mt-3" id="userList">
+                                {% for user in users %}
+                                <div class="col-12 col-md-6 col-lg-4 user-card-wrapper">
+                                    <div class="user-card">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="avatar me-3">
+                                                <span class="avatar-initial rounded-circle bg-{% if user.role == 'admin' %}red-100{% elif user.role == 'qc' %}blue-100{% else %}green-100{% endif %} text-{% if user.role == 'admin' %}red-600{% elif user.role == 'qc' %}blue-600{% else %}green-600{% endif %}">
+                                                    {{ user.email|first|upper }}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-gray-800 font-semibold">{{ user.email }}</h6>
+                                                <small class="text-gray-500">{% trans "Joined" %} {{ user.created_at|date:"M d, Y" }}</small>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <span class="badge bg-{% if user.role == 'admin' %}red-100 text-red-600{% elif user.role == 'qc' %}blue-100 text-blue-600{% else %}green-100 text-green-600{% endif %}">
+                                                {{ user.role|capfirst }}
+                                            </span>
+                                            <span class="badge bg-{% if user.is_active %}green-100 text-green-600{% else %}gray-100 text-gray-600{% endif %}">
+                                                <i class="fas fa-circle me-1 text-xs"></i> {{ user.is_active|yesno:"Active,Inactive" }}
+                                            </span>
+                                        </div>
+                                        <p class="text-gray-600 text-sm mb-3">
+                                            {% trans "Last active" %}: 
+                                            {% if user.last_login %}
+                                                <span class="last-active" data-timestamp="{{ user.last_login }}">{{ user.last_login|date:"M d, Y H:i" }}</span>
+                                            {% else %}
+                                                {% trans "Never" %}
+                                            {% endif %}
+                                        </p>
+                                        <div class="d-flex justify-content-end space-x-2">
+                                            <a href="{% url 'edit_user' user.uid %}" class="action-btn btn-outline-primary" data-bs-toggle="tooltip" title="{% trans "Edit User" %}">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                            <a href="{% url 'delete_user' user.uid %}" class="action-btn btn-outline-danger" data-bs-toggle="tooltip" title="{% trans "Delete User" %}" data-email="{{ user.email }}">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% empty %}
+                                <div class="col-12 text-center py-5">
+                                    <i class="fas fa-users-slash text-gray-400 text-4xl mb-3"></i>
+                                    <p class="text-gray-600">{% trans "No users found." %}</p>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="deleteUserModal" tabindex="-1" aria-labelledby="deleteUserModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-primary text-white">
+                    <h5 class="modal-title" id="deleteUserModalLabel">{% trans "Confirm Deletion" %}</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>{% trans "Are you sure you want to delete" %} <strong id="deleteUserEmail"></strong>?</p>
+                    <p class="text-muted">{% trans "This action cannot be undone." %}</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                    <a id="confirmDeleteBtn" href="#" class="btn btn-danger">{% trans "Delete" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+<script>
+    $(document).ready(function() {
+        // Initialize Tooltips
+        $('[data-bs-toggle="tooltip"]').tooltip();
+
+        // Format last active timestamps
+        function formatRelativeTime(timestamp) {
+            if (!timestamp) return '{% trans "Never" %}';
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diffMs = now - date;
+            const diffSec = Math.floor(diffMs / 1000);
+            const diffMin = Math.floor(diffSec / 60);
+            const diffHr = Math.floor(diffMin / 60);
+            const diffDay = Math.floor(diffHr / 24);
+
+            if (diffSec < 60) return `${diffSec} {% trans "seconds ago" %}`;
+            if (diffMin < 60) return `${diffMin} ${diffMin == 1 ? '{% trans "minute" %}' : '{% trans "minutes" %}'} {% trans "ago" %}`;
+            if (diffHr < 24) return `${diffHr} ${diffHr == 1 ? '{% trans "hour" %}' : '{% trans "hours" %}'} {% trans "ago" %}`;
+            if (diffDay < 30) return `${diffDay} ${diffDay == 1 ? '{% trans "day" %}' : '{% trans "days" %}'} {% trans "ago" %}`;
+            return date.toLocaleString('{% if language == "ur" %}ur-PK{% else %}en-US{% endif %}', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+        }
+
+        $('.last-active').each(function() {
+            const timestamp = $(this).data('timestamp');
+            $(this).text(formatRelativeTime(timestamp));
+        });
+
+        // Form validation
+        (function () {
+            'use strict';
+            var forms = document.querySelectorAll('.needs-validation');
+            Array.prototype.slice.call(forms).forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    const password = document.getElementById('password').value;
+                    const confirmPassword = document.getElementById('confirm_password').value;
+                    const roleInputs = document.getElementsByName('role');
+                    let roleSelected = false;
+                    for (let input of roleInputs) {
+                        if (input.checked) {
+                            roleSelected = true;
+                            break;
+                        }
+                    }
+                    if (!roleSelected) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                        alert('{% trans "Please select a user role." %}');
+                    }
+                    if (password && password !== confirmPassword) {
+                        document.getElementById('confirm_password').setCustomValidity('{% trans "Passwords do not match." %}');
+                    } else {
+                        document.getElementById('confirm_password').setCustomValidity('');
+                    }
+                    if (!form.checkValidity() || !roleSelected) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        // Password strength indicator
+        $('#password').on('input', function() {
+            var password = $(this).val();
+            var strength = 0;
+            
+            if (password.length >= 8) strength++;
+            if (password.match(/\d/)) strength++;
+            if (password.match(/[^a-zA-Z0-9]/)) strength++;
+            if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+            
+            var strengthText = ['{% trans "Weak" %}', '{% trans "Fair" %}', '{% trans "Good" %}', '{% trans "Strong" %}', '{% trans "Very Strong" %}'][strength];
+            var strengthClass = ['red', 'yellow', 'blue', 'indigo', 'green'][strength];
+            
+            $('.password-strength').remove();
+            $(this).parent().parent().append(
+                '<div class="password-strength mt-2 text-' + strengthClass + '-600 text-sm">' +
+                '<span class="font-medium">' + strengthText + '</span>' +
+                '<div class="w-full bg-gray-200 rounded-full h-1.5 mt-1">' +
+                '<div class="bg-' + strengthClass + '-500 h-1.5 rounded-full transition-all duration-300" style="width: ' + (strength * 25) + '%"></div>' +
+                '</div></div>'
+            );
+            $('.password-strength').addClass('show');
+        });
+
+        // Toggle password visibility
+        $('.toggle-password').click(function() {
+            var input = $('#password');
+            var icon = $(this).find('i');
+            if (input.attr('type') === 'password') {
+                input.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                input.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Animate form inputs on focus
+        $('.form-control').on('focus', function() {
+            $(this).parent().css({
+                'transform': 'scale(1.02)',
+                'box-shadow': '0 0 8px rgba(59, 130, 246, 0.2)'
+            });
+        }).on('blur', function() {
+            $(this).parent().css({
+                'transform': 'scale(1)',
+                'box-shadow': 'none'
+            });
+        });
+
+        // Animate role selection
+        $('.card-role input').on('change', function() {
+            $('.card-role .card').removeClass('border-3 border-blue-500 bg-blue-50');
+            $(this).next('label').find('.card').addClass('border-3 border-blue-500 bg-blue-50');
+        });
+
+        // Animate collapse button
+        $('#userFormCollapse, #filterCollapse').on('show.bs.collapse', function() {
+            $(this).prev('.card-header').find('.btn i').css('transform', 'rotate(180deg)');
+        }).on('hide.bs.collapse', function() {
+            $(this).prev('.card-header').find('.btn i').css('transform', 'rotate(0deg)');
+        });
+
+        // User filtering and search
+        function filterUsers() {
+            const search = $('#searchUsers').val().toLowerCase();
+            const role = $('#filterRole').val();
+            const status = $('#filterStatus').val();
+            
+            $('.user-card-wrapper').each(function() {
+                const card = $(this);
+                const email = card.find('h6').text().toLowerCase();
+                const userRole = card.find('.badge').first().text().toLowerCase();
+                const userStatus = card.find('.badge').last().text().toLowerCase();
+                
+                const matchesSearch = email.includes(search);
+                const matchesRole = !role || userRole.includes(role);
+                const matchesStatus = !status || (status === 'active' && userStatus.includes('active')) || (status === 'inactive' && userStatus.includes('inactive'));
+                
+                if (matchesSearch && matchesRole && matchesStatus) {
+                    card.fadeIn(300);
+                } else {
+                    card.fadeOut(300);
+                }
+            });
+        }
+
+        $('#searchUsers, #filterRole, #filterStatus').on('input change', filterUsers);
+
+        // Delete confirmation modal
+        $('.action-btn.btn-outline-danger').click(function(e) {
+            e.preventDefault();
+            const email = $(this).data('email');
+            const href = $(this).attr('href');
+            $('#deleteUserEmail').text(email);
+            $('#confirmDeleteBtn').attr('href', href);
+            $('#deleteUserModal').modal('show');
+        });
+
+        // Animate user cards on load
+        $('.user-card').each(function(index) {
+            $(this).css({
+                'animation': 'fadeInUp 0.5s ease-out',
+                'animation-delay': `${index * 0.1}s`
+            });
+        });
+    });
+</script>
+{% endblock %}

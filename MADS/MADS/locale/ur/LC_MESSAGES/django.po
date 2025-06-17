@@ -1,0 +1,659 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MADS\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-05-23 09:49+0500\n"
+"PO-Revision-Date: 2025-05-23 16:48+0500\n"
+"Last-Translator: Zeeshan Fareed <rooshanfareed2@gmail.com>\n"
+"Language-Team: Urdu\n"
+"Language: ur\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+# Views.py Translations (Dashboard)
+msgid "User not authenticated"
+msgstr "صارف کی تصدیق نہیں ہوئی"
+
+msgid "User data not found"
+msgstr "صارف کا ڈیٹا نہیں ملا"
+
+msgid "Error loading dashboard"
+msgstr "ڈیش بورڈ لوڈ کرنے میں خرابی"
+
+# User Roles (for template display)
+msgid "admin"
+msgstr "ایڈمنسٹریٹر"
+
+msgid "qc"
+msgstr "کوالٹی کنٹرول"
+
+msgid "user"
+msgstr "عام صارف"
+
+# Existing Views.py Translations
+msgid "Settings reset to default (English language, Asia/Karachi timezone)."
+msgstr "ترتیبات کو طے شدہ اقدار پر دوبارہ ترتیب دیا گیا (انگریزی زبان، ایشیا/کراچی ٹائم زون)۔"
+
+msgid "All prediction data cleared successfully."
+msgstr "تمام پیش گوئی کا ڈیٹا کامیابی سے صاف کر دیا گیا۔"
+
+msgid "Error clearing prediction data: {str(e)}"
+msgstr "پیش گوئی کا ڈیٹا صاف کرنے میں خرابی: {str(e)}"
+
+msgid "Preferences updated successfully."
+msgstr "ترجیحات کامیابی سے اپ ڈیٹ ہو گئیں۔"
+
+msgid "Error fetching users: {str(e)}"
+msgstr "صارفین حاصل کرنے میں خرابی: {str(e)}"
+
+msgid "All fields are required."
+msgstr "تمام فیلڈز درکار ہیں۔"
+
+msgid "Please provide a valid email."
+msgstr "براہ کرم ایک درست ای میل فراہم کریں۔"
+
+msgid "Password must be at least 8 characters long."
+msgstr "پاس ورڈ کم از کم 8 حروف کا ہونا چاہیے۔"
+
+msgid "Passwords must match."
+msgstr "پاس ورڈز مماثل ہونے چاہئیں۔"
+
+msgid "Invalid role selected."
+msgstr "غلط کردار منتخب کیا گیا۔"
+
+msgid "User created successfully."
+msgstr "صارف کامیابی سے بنایا گیا۔"
+
+msgid "An account with this email already exists."
+msgstr "اس ای میل کے ساتھ ایک اکاؤنٹ پہلے سے موجود ہے۔"
+
+msgid "Error creating user: {str(e)}"
+msgstr "صارف بنانے میں خرابی: {str(e)}"
+
+msgid "No predictions available in the database."
+msgstr "کوئی پیش گوئیاں ڈیٹا بیس میں دستیاب نہیں ہیں۔"
+
+msgid "No predictions match the applied filters."
+msgstr "فلٹرز کے مطابق کوئی پیش گوئیاں نہیں ملتیں۔"
+
+msgid "Error loading report: {error}"
+msgstr "رپورٹ لوڈ کرنے میں خرابی: {error}"
+
+# Base.html Translations
+msgid "Milk Adulteration Detection System"
+msgstr "دودھ کی ملاوٹ کا پتہ لگانے کا نظام"
+
+msgid "Dashboard"
+msgstr "ڈیش بورڈ"
+
+msgid "Reports"
+msgstr "رپورٹس"
+
+msgid "User Management"
+msgstr "صارفین کا انتظام"
+
+msgid "Settings"
+msgstr "ترتیبات"
+
+msgid "Help"
+msgstr "مدد"
+
+msgid "Toggle Theme"
+msgstr "تھیم تبدیل کریں"
+
+msgid "Logout"
+msgstr "لاگ آؤٹ"
+
+msgid "Login"
+msgstr "لاگ ان"
+
+msgid "Profile"
+msgstr "پروفائل"
+
+# Help.html Translations
+msgid "Help & Documentation"
+msgstr "مدد اور دستاویزات"
+
+msgid "Getting Started"
+msgstr "شروعات"
+
+msgid "Dashboard Guide"
+msgstr "ڈیش بورڈ گائیڈ"
+
+msgid "Generating Reports"
+msgstr "رپورٹس تیار کرنا"
+
+msgid "Troubleshooting"
+msgstr "مسائل کا حل"
+
+msgid "Welcome to the Milk Adulteration Detection System (MADS). This system helps you monitor milk quality and detect adulteration using advanced sensors and machine learning."
+msgstr "دودھ کی ملاوٹ کا پتہ لگانے کے نظام (MADS) میں خوش آمدید۔ یہ نظام جدید سینسرز اور مشین لرننگ کا استعمال کرتے ہوئے دودھ کے معیار کی نگرانی اور ملاوٹ کا پتہ لگانے میں مدد کرتا ہے۔"
+
+msgid "System Requirements"
+msgstr "نظام کے تقاضے"
+
+msgid "Modern web browser (Chrome, Firefox, Edge, or Safari)"
+msgstr "جدید ویب براؤزر (کروم، فائر فاکس، ایج، یا سفاری)"
+
+msgid "Stable internet connection for real-time data updates"
+msgstr "ریئل ٹائم ڈیٹا اپ ڈیٹس کے لیے مستحکم انٹرنیٹ کنکشن"
+
+msgid "Minimum screen resolution of 1024x768"
+msgstr "کم از کم سکرین ریزولوشن 1024x768"
+
+msgid "Firebase account for data storage (configured by admin)"
+msgstr "ڈیٹا اسٹوریج کے لیے فائر بیس اکاؤنٹ (ایڈمن کے ذریعے ترتیب دیا گیا)"
+
+msgid "First Steps"
+msgstr "پہلے اقدامات"
+
+msgid "Sign up or log in using your credentials."
+msgstr "اپنی اسناد کا استعمال کرتے ہوئے سائن اپ یا لاگ ان کریں۔"
+
+msgid "Navigate to the Dashboard to view real-time sensor data."
+msgstr "ریئل ٹائم سینسر ڈیٹا دیکھنے کے لیے ڈیش بورڈ پر جائیں۔"
+
+msgid "Upload a CSV file with sensor data to perform a milk analysis."
+msgstr "دودھ کے تجزیے کے لیے سینسر ڈیٹا کے ساتھ CSV فائل اپ لوڈ کریں۔"
+
+msgid "Check the Reports section for detailed analysis and history."
+msgstr "تفصیلی تجزیہ اور تاریخ کے لیے رپورٹس سیکشن چیک کریں۔"
+
+msgid "Configure preferences in Settings (admin/QC only)."
+msgstr "ترتیبات میں ترجیحات ترتیب دیں (صرف ایڈمن/کیو سی کے لیے)۔"
+
+msgid "The dashboard is the central hub for monitoring milk quality parameters and viewing adulteration detection results in real-time."
+msgstr "ڈیش بورڈ دودھ کے معیار کے پیرامیٹرز کی نگرانی اور ملاوٹ کا پتہ لگانے کے نتائج کو ریئل ٹائم میں دیکھنے کا مرکزی مرکز ہے۔"
+
+msgid "Key Components"
+msgstr "اہم اجزاء"
+
+msgid "System Overview"
+msgstr "نظام کا جائزہ"
+
+msgid "Displays connected sensors, pure/adulterated sample counts, and last detection time."
+msgstr "جڑے ہوئے سینسرز، خالص/ملاوٹ شدہ نمونوں کی تعداد، اور آخری پتہ لگانے کا وقت دکھاتا ہے۔"
+
+msgid "Live Sensor Data"
+msgstr "لائیو سینسر ڈیٹا"
+
+msgid "Shows real-time values for parameters like pH, Temperature, and Gas, with CSV upload for additional data."
+msgstr "پی ایچ، درجہ حرارت، اور گیس جیسے پیرامیٹرز کے لیے ریئل ٹائم اقدار دکھاتا ہے، اضافی ڈیٹا کے لیے CSV اپ لوڈ کے ساتھ۔"
+
+msgid "Current Milk Analysis"
+msgstr "موجودہ دودھ کا تجزیہ"
+
+msgid "Presents the latest prediction with XAI insights and visual indicators."
+msgstr "تازہ ترین پیش گوئی کو XAI بصیرت اور بصری اشاروں کے ساتھ پیش کرتا ہے۔"
+
+msgid "Real-time Monitoring"
+msgstr "ریئل ٹائم نگرانی"
+
+msgid "Line charts tracking pH, Temperature, and Gas trends over time."
+msgstr "وقت کے ساتھ پی ایچ، درجہ حرارت، اور گیس کے رجحانات کو ٹریک کرنے والی لائن چارٹس۔"
+
+msgid "The Reports section allows Quality Control (QC) and Admin users to generate detailed analysis reports in PDF or CSV format."
+msgstr "رپورٹس سیکشن کوالٹی کنٹرول (کیو سی) اور ایڈمن صارفین کو پی ڈی ایف یا CSV فارمیٹ میں تفصیلی تجزیاتی رپورٹس تیار کرنے کی اجازت دیتا ہے۔"
+
+msgid "Steps to Generate Reports"
+msgstr "رپورٹس تیار کرنے کے مراحل"
+
+msgid "Navigate to the Reports section (available to Admin/QC roles)."
+msgstr "رپورٹس سیکشن پر جائیں (ایڈمن/کیو سی کرداروں کے لیے دستیاب)۔"
+
+msgid "Use the filter form to select a date range or search by prediction type."
+msgstr "تاریخ کی حد منتخب کرنے یا پیش گوئی کی قسم کے ذریعے تلاش کرنے کے لیے فلٹر فارم استعمال کریں۔"
+
+msgid "Click 'Apply Date Filter' to update the results."
+msgstr "نتائج کو اپ ڈیٹ کرنے کے لیے 'تاریخ فلٹر لگائیں' پر کلک کریں۔"
+
+msgid "Choose the export format (PDF or CSV) using the download buttons."
+msgstr "ڈاؤن لوڈ بٹنوں کا استعمال کرتے ہوئے ایکسپورٹ فارمیٹ (پی ڈی ایف یا CSV) منتخب کریں۔"
+
+msgid "Download the report for offline use or sharing."
+msgstr "آف لائن استعمال یا اشتراک کے لیے رپورٹ ڈاؤن لوڈ کریں۔"
+
+msgid "PDF reports include a prediction history table, key factors, and interpretation, while CSV reports provide raw data for further analysis."
+msgstr "پی ڈی ایف رپورٹس میں پیش گوئی کی تاریخ کا جدول، اہم عوامل، اور تشریح شامل ہوتی ہے، جبکہ CSV رپورٹس مزید تجزیہ کے لیے خام ڈیٹا فراہم کرتی ہیں۔"
+
+msgid "Admin users can manage user accounts, including creating, editing, and deleting users, as well as assigning roles."
+msgstr "ایڈمن صارفین صارف اکاؤنٹس کا انتظام کر سکتے ہیں، بشمول صارفین کو بنانا، ترمیم کرنا، اور حذف کرنا، نیز کردار تفویض کرنا۔"
+
+msgid "Managing Users"
+msgstr "صارفین کا انتظام"
+
+msgid "Go to the User Management section (Admin only)."
+msgstr "صارف انتظامی سیکشن پر جائیں (صرف ایڈمن کے لیے)۔"
+
+msgid "Create a new user by filling out the form with email, password, and role."
+msgstr "ای میل، پاس ورڈ، اور کردار کے ساتھ فارم پُر کرکے نیا صارف بنائیں۔"
+
+msgid "Edit existing users by clicking the edit icon on their card."
+msgstr "موجودہ صارفین کو ان کے کارڈ پر ترمیم آئیکن پر کلک کرکے ترمیم کریں۔"
+
+msgid "Delete users using the delete icon (cannot delete your own account)."
+msgstr "حذف آئیکن کا استعمال کرکے صارفین کو حذف کریں (آپ اپنا اکاؤنٹ حذف نہیں کر سکتے)۔"
+
+msgid "Filter users by email, role, or status for easier management."
+msgstr "آسان انتظام کے لیے ای میل، کردار، یا حالت کے ذریعے صارفین کو فلٹر کریں۔"
+
+msgid "Available roles include Administrator (full access), Quality Control (testing/reporting), and Regular User (dashboard access)."
+msgstr "دستیاب کرداروں میں ایڈمنسٹریٹر (مکمل رسائی)، کوالٹی کنٹرول (ٹیسٹنگ/رپورٹنگ)، اور باقاعدہ صارف (ڈیش بورڈ رسائی) شامل ہیں۔"
+
+msgid "Common Issues"
+msgstr "عام مسائل"
+
+msgid "Login Failure"
+msgstr "لاگ ان ناکامی"
+
+msgid "Ensure your email and password are correct. Use the 'Forgot Password' link if needed."
+msgstr "یقینی بنائیں کہ آپ کا ای میل اور پاس ورڈ درست ہیں۔ اگر ضرورت ہو تو 'پاس ورڈ بھول گئے' لنک استعمال کریں۔"
+
+msgid "No Sensor Data"
+msgstr "کوئی سینسر ڈیٹا نہیں"
+
+msgid "Check Firebase configuration and ensure sensors are connected. Verify CSV file format."
+msgstr "فائر بیس کنفیگریشن چیک کریں اور یقینی بنائیں کہ سینسرز جڑے ہوئے ہیں۔ CSV فائل فارمیٹ کی تصدیق کریں۔"
+
+msgid "Prediction Errors"
+msgstr "پیش گوئی کے نقائص"
+
+msgid "Ensure all required sensor values are provided in the CSV file and within valid ranges."
+msgstr "یقینی بنائیں کہ CSV فائل میں تمام مطلوبہ سینسر اقدار فراہم کی گئی ہیں اور وہ درست حدود میں ہیں۔"
+
+msgid "Report Generation Failure"
+msgstr "رپورٹ تیار کرنے میں ناکامی"
+
+msgid "Check date filters and ensure predictions exist in the database."
+msgstr "تاریخ کے فلٹرز چیک کریں اور یقینی بنائیں کہ ڈیٹا بیس میں پیش گوئیاں موجود ہیں۔"
+
+msgid "Slow Performance"
+msgstr "سست کارکردگی"
+
+msgid "Clear browser cache or try a different browser. Ensure a stable internet connection."
+msgstr "براؤزر کیش صاف کریں یا مختلف براؤزر آزمائیں۔ مستحکم انٹرنیٹ کنکشن یقینی بنائیں۔"
+
+msgid "Need More Help?"
+msgstr "مزید مدد کی ضرورت ہے؟"
+
+msgid "Contact our support team at"
+msgstr "ہماری سپورٹ ٹیم سے رابطہ کریں"
+
+msgid "or call"
+msgstr "یا کال کریں"
+
+# Setting.html Translations
+msgid "User Preferences"
+msgstr "صارف کی ترجیحات"
+
+msgid "Language"
+msgstr "زبان"
+
+msgid "English"
+msgstr "انگریزی"
+
+msgid "Urdu"
+msgstr "اردو"
+
+msgid "Timezone"
+msgstr "ٹائم زون"
+
+msgid "Asia/Karachi"
+msgstr "ایشیا/کراچی"
+
+msgid "Europe/London"
+msgstr "یورپ/لندن"
+
+msgid "Show Tooltips"
+msgstr "ٹول ٹپس دکھائیں"
+
+msgid "Save Preferences"
+msgstr "ترجیحات محفوظ کریں"
+
+msgid "Danger Zone"
+msgstr "خطرناک زون"
+
+msgid "Reset Settings"
+msgstr "ترتیبات دوبارہ ترتیب دیں"
+
+msgid "Reset all settings to their default values."
+msgstr "تمام ترتیبات کو ان کے طے شدہ اقدار پر دوبارہ ترتیب دیں۔"
+
+msgid "Clear Prediction Data"
+msgstr "پیش گوئی کا ڈیٹا صاف کریں"
+
+msgid "Permanently delete all prediction data from the database."
+msgstr "ڈیٹا بیس سے تمام پیش گوئی کا ڈیٹا مستقل طور پر حذف کریں۔"
+
+msgid "Clear Data"
+msgstr "ڈیٹا صاف کریں"
+
+msgid "Confirm Reset Settings"
+msgstr "ترتیبات دوبارہ ترتیب دینے کی تصدیق کریں"
+
+msgid "Are you sure you want to reset all settings to their default values? This action cannot be undone."
+msgstr "کیا آپ واقعی تمام ترتیبات کو ان کے طے شدہ اقدار پر دوبارہ ترتیب دینا چاہتے ہیں؟ اس عمل کو واپس نہیں کیا جا سکتا۔"
+
+msgid "Cancel"
+msgstr "منسوخ کریں"
+
+msgid "Confirm Clear Data"
+msgstr "ڈیٹا صاف کرنے کی تصدیق کریں"
+
+msgid "Are you sure you want to permanently delete all prediction data? This action cannot be undone."
+msgstr "کیا آپ واقعی تمام پیش گوئی کا ڈیٹا مستقل طور پر حذف کرنا چاہتے ہیں؟ اس عمل کو واپس نہیں کیا جا سکتا۔"
+
+# Users.html Translations
+msgid "Edit User"
+msgstr "صارف میں ترمیم کریں"
+
+msgid "Email Address"
+msgstr "ای میل ایڈریس"
+
+msgid "Password"
+msgstr "پاس ورڈ"
+
+msgid "Password is required."
+msgstr "پاس ورڈ درکار ہے۔"
+
+msgid "At least 8 characters with numbers and symbols"
+msgstr "کم از کم 8 حروف، نمبروں اور علامات کے ساتھ"
+
+msgid "Confirm Password"
+msgstr "پاس ورڈ کی تصدیق کریں"
+
+msgid "User Role"
+msgstr "صارف کا کردار"
+
+msgid "Administrator"
+msgstr "ایڈمنسٹریٹر"
+
+msgid "Full system access"
+msgstr "مکمل سسٹم رسائی"
+
+msgid "Quality Control"
+msgstr "کوالٹی کنٹرول"
+
+msgid "Testing and reporting"
+msgstr "ٹیسٹنگ اور رپورٹنگ"
+
+msgid "Regular User"
+msgstr "عام صارف"
+
+msgid "Basic dashboard access"
+msgstr "بنیادی ڈیش بورڈ رسائی"
+
+msgid "Update User"
+msgstr "صارف اپ ڈیٹ کریں"
+
+msgid "Create User"
+msgstr "صارف بنائیں"
+
+msgid "Search by email..."
+msgstr "ای میل کے ذریعے تلاش کریں..."
+
+msgid "All Roles"
+msgstr "تمام کردار"
+
+msgid "All Statuses"
+msgstr "تمام حالتیں"
+
+msgid "Active"
+msgstr "فعال"
+
+msgid "Inactive"
+msgstr "غیر فعال"
+
+msgid "Joined"
+msgstr "شامل ہوئے"
+
+msgid "Last active"
+msgstr "آخری بار فعال"
+
+msgid "Delete User"
+msgstr "صارف حذف کریں"
+
+msgid "No users found."
+msgstr "کوئی صارف نہیں ملا۔"
+
+msgid "Are you sure you want to delete"
+msgstr "کیا آپ واقعی حذف کرنا چاہتے ہیں"
+
+msgid "This action cannot be undone."
+msgstr "یہ عمل واپس نہیں کیا جا سکتا۔"
+
+msgid "Delete"
+msgstr "حذف کریں"
+
+msgid "seconds ago"
+msgstr "سیکنڈ پہلے"
+
+msgid "hour"
+msgstr "گھنٹہ"
+
+msgid "day"
+msgstr "دن"
+
+msgid "minutes"
+msgid_plural "minutes"
+msgstr[0] "منٹ"
+msgstr[1] "منٹوں"
+
+msgid "ago"
+msgstr "پہلے"
+
+msgid "Please select a user role."
+msgstr "براہ کرم صارف کا کردار منتخب کریں۔"
+
+msgid "Weak"
+msgstr "کمزور"
+
+msgid "Fair"
+msgstr "مناسب"
+
+msgid "Good"
+msgstr "اچھا"
+
+msgid "Strong"
+msgstr "مضبوط"
+
+msgid "Very Strong"
+msgstr "بہت مضبوط"
+
+msgid "Never"
+msgstr "کبھی نہیں"
+
+# Report.html Translations
+msgid "Milk Analysis Report"
+msgstr "دودھ کے تجزیے کی رپورٹ"
+
+msgid "Filter Report"
+msgstr "رپورٹ فلٹر کریں"
+
+msgid "Apply Date Filter"
+msgstr "تاریخ فلٹر لگائیں"
+
+msgid "Prediction History"
+msgstr "پیش گوئی کی تاریخ"
+
+msgid "Loading..."
+msgstr "لوڈ ہو رہا ہے..."
+
+msgid "No predictions available."
+msgstr "کوئی پیش گوئیاں ڈیٹا بیس میں دستیاب نہیں ہیں۔"
+
+msgid "Adulterated Milk"
+msgstr "ملاوٹ شدہ دودھ"
+
+msgid "Key Factors (Latest Prediction)"
+msgstr "اہم عوامل (تازہ ترین پیش گوئی)"
+
+msgid "Latest milk adulteration analysis results (Total: {{ count }})"
+msgstr "دودھ کی ملاوٹ کے تازہ ترین تجزیاتی نتائج (کل: {{ count }})"
+
+msgid "These parameters had the most significant impact on the latest prediction (%s):"
+msgstr "ان پیرامیٹرز کا تازہ ترین پیش گوئی (%s) پر سب سے زیادہ اثر پڑا:"
+
+msgid "No key factors available."
+msgstr "کوئی اہم عوامل دستیاب نہیں ہیں۔"
+
+msgid "Impact: {{ impact }}"
+msgstr "اثر: {{ impact }}"
+
+msgid "Download PDF"
+msgstr "پی ڈی ایف ڈاؤن لوڈ کریں"
+
+msgid "Download CSV"
+msgstr "CSV ڈاؤن لوڈ کریں"
+
+msgid "Error loading predictions. Please try again."
+msgstr "پیش گوئیاں لوڈ کرنے میں خرابی۔ براہ کرم دوبارہ کوشش کریں۔"
+
+# Dashboard Template Translations
+msgid "Connected Sensors"
+msgstr "منسلک سینسرز"
+
+msgid "Pure Samples"
+msgstr "خالص نمونے"
+
+msgid "Adulterated"
+msgstr "ملاوٹ شدہ"
+
+msgid "Last Detection"
+msgstr "آخری پتہ لگانا"
+
+msgid "Upload CSV File"
+msgstr "CSV فائل اپ لوڈ کریں"
+
+msgid "Upload CSV with values in order: Fat, SNF, Gravity, Lactose, Salts, Protein, Added Water, Temperature, Freeze Point, pH, EC"
+msgstr "CSV فائل اپ لوڈ کریں جس میں اقدار اس ترتیب سے ہوں: چربی، SNF، گریویٹی، لیکٹوز، نمکیات، پروٹین، اضافی پانی، درجہ حرارت، فریز پوائنٹ، pH، EC"
+
+msgid "Parameter"
+msgstr "پیرامیٹر"
+
+msgid "Value"
+msgstr "قدر"
+
+msgid "Status"
+msgstr "حالت"
+
+msgid "Lactose"
+msgstr "لیکٹوز"
+
+msgid "Fat"
+msgstr "چربی"
+
+msgid "SNF"
+msgstr "SNF"
+
+msgid "Protein"
+msgstr "پروٹین"
+
+msgid "Gravity"
+msgstr "گریویٹی"
+
+msgid "sdagdg"
+msgstr "گریویٹی"
+
+msgid "pH"
+msgstr "pH"
+
+msgid "Temperature"
+msgstr "درجہ حرارت"
+
+msgid "Gas"
+msgstr "گیس"
+
+msgid "EC"
+msgstr "EC"
+
+msgid "Waiting"
+msgstr "انتظار کر رہا ہے"
+
+msgid "Milk Sample"
+msgstr "دودھ کا نمونہ"
+
+msgid "No data yet"
+msgstr "ابھی تک کوئی ڈیٹا نہیں"
+
+msgid "Waiting for data..."
+msgstr "ڈیٹا کے انتظار میں..."
+
+msgid "XAI Insights"
+msgstr "XAI بصیرت"
+
+msgid "System initializing..."
+msgstr "نظام شروع ہو رہا ہے..."
+
+msgid "The system is waiting for the first data sample. Analysis will begin shortly."
+msgstr "نظام پہلے ڈیٹا نمونے کے انتظار میں ہے۔ تجزیہ جلد شروع ہو جائے گا۔"
+
+msgid "Temperature (°C)"
+msgstr "درجہ حرارت (°C)"
+
+msgid "No file selected"
+msgstr "کوئی فائل منتخب نہیں کی گئی"
+
+msgid "Error"
+msgstr "خرابی"
+
+msgid "Error uploading CSV file"
+msgstr "CSV فائل اپ لوڈ کرنے میں خرابی"
+
+msgid "Prediction completed"
+msgstr "پیشگوئی مکمل ہو گئی"
+
+msgid "Alert"
+msgstr "انتباہ"
+
+msgid "Normal"
+msgstr "نارمل"
+
+msgid "No feature importance data available"
+msgstr "کوئی فیچر کی اہمیت کا ڈیٹا دستیاب نہیں"
+
+msgid "This sample meets all quality standards for pure milk."
+msgstr "یہ نمونہ خالص دودھ کے تمام معیارات پر پورا اترتا ہے۔"
+
+msgid "Urea detected in milk. Urea is added to increase the apparent protein content."
+msgstr "دودھ میں یوریا پایا گیا۔ یوریا ظاہری پروٹین کی مقدار بڑھانے کے لیے شامل کیا جاتا ہے۔"
+
+msgid "Starch detected in milk. Starch is added to increase viscosity and density."
+msgstr "دودھ میں نشاستہ پایا گیا۔ نشاستہ چپچپاہٹ اور کثافت بڑھانے کے لیے شامل کیا جاتا ہے۔"
+
+msgid "Sodium bicarbonate detected. Used to neutralize acidity in spoiled milk."
+msgstr "سوڈیم بائی کاربونیٹ پایا گیا۔ خراب دودھ کی تیزابیت کو ختم کرنے کے لیے استعمال ہوتا ہے۔"
+
+msgid "Maltodextrin detected in milk. Used to artificially increase solid content and density."
+msgstr "دودھ میں مالٹوڈیکسٹرین پایا گیا۔ ٹھوس مواد اور کثافت کو مصنوعی طور پر بڑھانے کے لیے استعمال ہوتا ہے۔"
+
+msgid "Formaldehyde detected. A dangerous preservative added to extend shelf life."
+msgstr "فارملڈہائیڈ پایا گیا۔ شیلف لائف بڑھانے کے لیے ایک خطرناک محافظ شامل کیا گیا۔"
+
+msgid "Excessive water content detected. Milk has been diluted to increase volume."
+msgstr "زیادہ پانی کی مقدار پائی گئی۔ دودھ کو حجم بڑھانے کے لیے پتلا کیا گیا ہے۔"
+
+msgid "The system is analyzing the milk sample."
+msgstr "نظام دودھ کے نمونے کا تجزیہ کر رہا ہے۔"
+
+msgid "Urea Adulteration"
+msgstr "یوریا ملاوٹ"
+
+msgid "Starch Adulteration"
+msgstr "نشاستہ ملاوٹ"
+
+msgid "Sodium Bicarbonate Adulteration"
+msgstr "سوڈیم بائی کاربونیٹ ملاوٹ"
+
+msgid "Maltodextrin Adulteration"
+msgstr "مالٹوڈیکسٹرین ملاوٹ"
+
+msgid "Formaldehyde Adulteration"
+msgstr "فارملڈہائیڈ ملاوٹ"
+
+msgid "Water Adulteration"
+msgstr "پانی کی ملاوٹ"
+
+

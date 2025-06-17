@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center vh-100">
+    <div class="row w-100 justify-content-center">
+        <div class="col-md-6 col-lg-5 col-sm-10">
+            <div class="card shadow-lg border-0" style="border-radius: 20px; overflow: hidden; background: linear-gradient(145deg, #ffffff, #f1f5f9);">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <!-- Image on the left -->
+                        <img src="https://github.com/ZeshanFareed/Bootstrap/blob/main/man.png?raw=true" alt="Login Icon" class="img-fluid me-3" style="max-width: 100px;">
+                        <!-- Text on the right -->
+                        <div>
+                            <h2 class="card-title fw-bold mb-1" style="color: var(--text-primary); font-size: 1.6rem;">Welcome Back</h2>
+                            <p class="text-muted" style="font-size: 0.9rem;">Login to your MADS account</p>
+                        </div>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-3 position-relative">
+                            <label for="email" class="form-label fw-medium" style="color: var(--text-primary);">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
+                                    <i class="fas fa-envelope text-primary"></i>
+                                </span>
+                                <input type="email" class="form-control border-start-0" id="email" name="email" placeholder="you@example.com" required style="border-radius: 0 10px 10px 0; transition: all 0.3s ease;">
+                            </div>
+                        </div>
+                        <div class="mb-3 position-relative">
+                            <label for="password" class="form-label fw-medium" style="color: var(--text-primary);">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0" style="border-radius: 10px 0 0 10px;">
+                                    <i class="fas fa-lock text-primary"></i>
+                                </span>
+                                <input type="password" class="form-control border-start-0" id="password" name="password" placeholder="••••••••" required style="border-radius: 0 10px 10px 0; transition: all 0.3s ease;">
+                                <span class="input-group-text bg-white border-start-0 toggle-password" style="border-radius: 0 10px 10px 0; cursor: pointer;">
+                                    <i class="fas fa-eye text-muted"></i>
+                                </span>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn w-100 text-white fw-medium py-2" style="background: var(--primary-gradient); border-radius: 10px; transition: transform 0.2s ease, box-shadow 0.3s ease;">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login
+                        </button>
+                    </form>
+                    <div class="text-center mt-3">
+                        <a href="#" class="text-decoration-none" style="color: #3b82f6; font-size: 0.85rem;">Forgot Password?</a>
+                        <span class="text-muted mx-2">|</span>
+                        <a href="{% url 'signup' %}" class="text-decoration-none" style="color: #3b82f6; font-size: 0.85rem;">Create an Account</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .container {
+        height: 100vh;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.05), rgba(255, 255, 255, 0.1));
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: -90px;
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .form-control:focus {
+        box-shadow: 0 0 0 0.25rem rgba(59, 130, 246, 0.25);
+        border-color: #3b82f6;
+    }
+
+    .btn:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .input-group-text {
+        transition: background 0.3s ease;
+    }
+
+    .input-group:hover .input-group-text {
+        background: #f1f5f9;
+    }
+
+    @media (max-width: 576px) {
+        .card-body {
+            padding: 1.5rem;
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+        }
+
+        .form-label {
+            font-size: 0.85rem;
+        }
+
+        .btn {
+            font-size: 0.85rem;
+            padding: 0.6rem;
+        }
+
+        img {
+            max-width: 80px;
+        }
+    }
+</style>
+
+<script>
+    $(document).ready(function() {
+        // Password toggle functionality
+        $('.toggle-password').click(function() {
+            const passwordInput = $('#password');
+            const icon = $(this).find('i');
+            if (passwordInput.attr('type') === 'password') {
+                passwordInput.attr('type', 'text');
+                icon.removeClass('fa-eye').addClass('fa-eye-slash');
+            } else {
+                passwordInput.attr('type', 'password');
+                icon.removeClass('fa-eye-slash').addClass('fa-eye');
+            }
+        });
+
+        // Animate form inputs on focus
+        $('.form-control').on('focus', function() {
+            $(this).parent().find('.input-group-text i').css('color', '#1e40af');
+        }).on('blur', function() {
+            $(this).parent().find('.input-group-text i').css('color', '#3b82f6');
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block title %}{% trans "Settings" %}{% endblock %}
+
+{% block content %}
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<div class="container-fluid py-4">
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-lg border-0" style="border-radius: 15px; overflow: hidden; background: linear-gradient(145deg, #ffffff, #f4f7fc);">
+                <div class="card-header bg-primary text-white py-3 d-flex align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-cog me-2"></i>{% trans "Settings" %}</h4>
+                </div>
+                <div class="card-body p-4">
+                    <!-- Accordion for Settings -->
+                    <div class="accordion" id="settingsAccordion">
+                        <!-- User Preferences -->
+                        <div class="accordion-item border-0 mb-3" style="border-radius: 8px; overflow: hidden;">
+                            <h2 class="accordion-header" id="headingUser">
+                                <button class="accordion-button bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapseUser" aria-expanded="true" aria-controls="collapseUser">
+                                    <i class="fas fa-user me-2"></i>{% trans "User Preferences" %}
+                                </button>
+                            </h2>
+                            <div id="collapseUser" class="accordion-collapse collapse show" aria-labelledby="headingUser" data-bs-parent="#settingsAccordion">
+                                <div class="accordion-body">
+                                    <form method="post" action="{% url 'setting' %}">
+                                        {% csrf_token %}
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="language" class="form-label fw-medium">{% trans "Language" %}</label>
+                                                    <select class="form-select" id="language" name="language" required>
+                                                        <option value="en" {% if language == 'en' %}selected{% endif %}>{% trans "English" %}</option>
+                                                        <option value="ur" {% if language == 'ur' %}selected{% endif %}>{% trans "Urdu" %}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="mb-3">
+                                                    <label for="timezone" class="form-label fw-medium">{% trans "Timezone" %}</label>
+                                                    <select class="form-select" id="timezone" name="timezone" required>
+                                                        <option value="Asia/Karachi" {% if timezone == 'Asia/Karachi' %}selected{% endif %}>{% trans "Asia/Karachi" %}</option>
+                                                        <option value="Europe/London" {% if timezone == 'Europe/London' %}selected{% endif %}>{% trans "Europe/London" %}</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="mb-3 form-check">
+                                                    <input type="checkbox" class="form-check-input" id="showTooltips" name="show_tooltips" {% if show_tooltips %}checked{% endif %}>
+                                                    <label class="form-check-label" for="showTooltips">{% trans "Show Tooltips" %}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary mt-3"><i class="fas fa-save me-2"></i>{% trans "Save Preferences" %}</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Danger Zone -->
+                        <div class="accordion-item border-0 mb-3" style="border-radius: 8px; overflow: hidden;">
+                            <h2 class="accordion-header" id="headingDanger">
+                                <button class="accordion-button collapsed bg-light text-danger" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDanger" aria-expanded="false" aria-controls="collapseDanger">
+                                    <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Danger Zone" %}
+                                </button>
+                            </h2>
+                            <div id="collapseDanger" class="accordion-collapse collapse" aria-labelledby="headingDanger" data-bs-parent="#settingsAccordion">
+                                <div class="accordion-body">
+                                    <div class="card border-danger">
+                                        <div class="card-body">
+                                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                                <div>
+                                                    <h5>{% trans "Reset Settings" %}</h5>
+                                                    <p class="text-muted">{% trans "Reset all settings to their default values." %}</p>
+                                                    <button class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#resetSettingsModal">
+                                                        <i class="fas fa-undo me-2"></i>{% trans "Reset Settings" %}
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <hr>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <h6 class="text-danger"><i class="fas fa-exclamation-circle me-1"></i>{% trans "Clear Prediction Data" %}</h6>
+                                                    <p class="mb-0">{% trans "Permanently delete all prediction data from the database." %}</p>
+                                                </div>
+                                                <button class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#clearDataModal">{% trans "Clear Data" %}</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reset Settings Modal -->
+<div class="modal fade" id="resetSettingsModal" tabindex="-1" aria-labelledby="resetSettingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="resetSettingsModalLabel">{% trans "Confirm Reset Settings" %}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% trans "Are you sure you want to reset all settings to their default values? This action cannot be undone." %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <form method="post" action="{% url 'setting' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="reset_settings">
+                    <button type="submit" class="btn btn-danger">{% trans "Reset Settings" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Clear Data Modal -->
+<div class="modal fade" id="clearDataModal" tabindex="-1" aria-labelledby="clearDataModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-danger text-white">
+                <h5 class="modal-title" id="clearDataModalLabel">{% trans "Confirm Clear Data" %}</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% trans "Are you sure you want to permanently delete all prediction data? This action cannot be undone." %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <form method="post" action="{% url 'setting' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="clear_data">
+                    <button type="submit" class="btn btn-danger">{% trans "Clear Data" %}</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Load saved settings from localStorage if available
+        if (localStorage.getItem('userPreferences')) {
+            const userPreferences = JSON.parse(localStorage.getItem('userPreferences'));
+            document.getElementById('language').value = userPreferences.language || 'en';
+            document.getElementById('timezone').value = userPreferences.timezone || 'Asia/Karachi';
+            document.getElementById('showTooltips').checked = userPreferences.showTooltips !== false;
+        }
+
+        // Save settings to localStorage when form is submitted
+        document.querySelectorAll('form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                if (!form.closest('#collapseDanger')) {
+                    if (form.closest('#collapseUser')) {
+                        const userPreferences = {
+                            language: document.getElementById('language').value,
+                            timezone: document.getElementById('timezone').value,
+                            showTooltips: document.getElementById('showTooltips').checked
+                        };
+                        localStorage.setItem('userPreferences', JSON.stringify(userPreferences));
+                    }
+                }
+            });
+        });
+
+        // Reset localStorage to default settings
+        document.querySelector('#resetSettingsModal form').addEventListener('submit', function() {
+            const defaultPreferences = {
+                language: 'en',
+                timezone: 'Asia/Karachi',
+                showTooltips: true
+            };
+            localStorage.setItem('userPreferences', JSON.stringify(defaultPreferences));
+        });
+
+        // Clear localStorage for prediction-related data (no user or sensor data)
+        document.querySelector('#clearDataModal form').addEventListener('submit', function() {
+            // No localStorage clearing since we only clear Firebase prediction data
+        });
+    });
+</script>
+{% endblock %}
+
+<style>
+    .accordion-button {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .accordion-button:not(.collapsed) {
+        background: linear-gradient(135deg, #4a90e2, #63b8ff);
+        color: white;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .form-control, .form-select {
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus, .form-select:focus {
+        box-shadow: 0 0 8px rgba(74, 144, 226, 0.4);
+        border-color: #4a90e2;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #4a90e2, #63b8ff);
+        border: none;
+        transition: transform 0.2s ease, box-shadow 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        transform: scale(1.03);
+        box-shadow: 0 6px 20px rgba(59, 130, 246, 0.3);
+    }
+
+    .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    @media (max-width: 576px) {
+        .accordion-button {
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+        }
+    }
+</style>

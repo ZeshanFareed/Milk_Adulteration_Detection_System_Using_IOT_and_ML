@@ -1,0 +1,560 @@
+{% load role_tags %}
+{% load i18n static %}
+{% get_current_language as LANGUAGE_CODE %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>{% block title %}{% trans "Milk Adulteration Detection System" %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            --sidebar-bg: rgba(31, 41, 55, 0.98);
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --text-primary: #1f2937;
+            --text-secondary: #6b7280;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            --border-radius: 12px;
+        }
+
+        [data-theme="dark"] {
+            --sidebar-bg: rgba(17, 24, 39, 0.98);
+            --glass-bg: rgba(31, 41, 55, 0.95);
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            background: linear-gradient(180deg, #111827 0%, #1f2937 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #f3f4f6 0%, #ffffff 100%);
+            color: var(--text-primary);
+            margin: 0;
+            overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 280px;
+            background: var(--sidebar-bg);
+            backdrop-filter: blur(12px);
+            color: white;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1050;
+            overflow-y: auto;
+            box-shadow: var(--shadow);
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar .sidebar-brand {
+            padding: 2rem 1.5rem;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .sidebar .sidebar-brand img {
+            max-width: 200px;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar .sidebar-brand img:hover {
+            transform: scale(1.08);
+        }
+
+        .sidebar .nav-link {
+            color: #d1d5db;
+            padding: 0.85rem 1.5rem;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: var(--border-radius);
+            margin: 0.3rem 1rem;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            color: white;
+            background: rgba(59, 130, 246, 0.2);
+            transform: translateX(4px);
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 0.85rem;
+            font-size: 1.2rem;
+        }
+
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: 100vh;
+            transition: margin-left 0.3s ease;
+        }
+
+        .navbar {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-radius: var(--border-radius);
+            padding: 0.75rem 1.5rem;
+        }
+
+        .navbar-brand {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 1.25rem;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            font-size: 0.7rem;
+            padding: 0.3rem 0.5rem;
+            background: #ef4444;
+            animation: pulse 2s infinite;
+            border-radius: 50%;
+        }
+
+        .sidebar-toggler {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.6rem 0.8rem;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+            z-index: 1060;
+        }
+
+        .sidebar-toggler:hover {
+            transform: scale(1.15);
+            box-shadow: var(--shadow);
+        }
+
+        .dropdown-menu {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: none;
+            box-shadow: var(--shadow);
+            border-radius: var(--border-radius);
+            animation: slideIn 0.3s ease;
+            min-width: 200px;
+        }
+
+        .dropdown-item {
+            color: var(--text-primary);
+            padding: 0.6rem 1.5rem;
+            transition: all 0.2s ease;
+            border-radius: 8px;
+            margin: 0.2rem;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(59, 130, 246, 0.15);
+            transform: translateX(3px);
+        }
+
+        .alert {
+            border-radius: var(--border-radius);
+            padding: 1rem 1.5rem;
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 0.5s ease-out;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(20deg);
+        }
+
+        .page-loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 1;
+            transition: opacity 0.5s ease;
+        }
+
+        .page-loading.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .spinner {
+            width: 3.5rem;
+            height: 3.5rem;
+            border: 5px solid #3b82f6;
+            border-top: 5px solid transparent;
+            border-radius: 50%;
+            animation: spin 0.8s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(25px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 991.98px) {
+            .sidebar {
+                transform: translateX(-280px);
+                width: 260px;
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+            .navbar-brand {
+                font-size: 1.1rem;
+            }
+            .notification-badge {
+                top: -5px;
+                right: -5px;
+                font-size: 0.65rem;
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            .main-content {
+                padding: 1rem;
+            }
+            .navbar {
+                border-radius: 10px;
+                padding: 0.5rem 1rem;
+            }
+            .sidebar-brand img {
+                max-width: 160px;
+            }
+            .sidebar .nav-link {
+                padding: 0.7rem 1.25rem;
+                font-size: 0.95rem;
+            }
+            .alert {
+                font-size: 0.9rem;
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        @media (max-width: 575.98px) {
+            .sidebar {
+                width: 100%;
+                transform: translateX(-100%);
+            }
+            .sidebar.active {
+                transform: translateX(0);
+            }
+            .navbar-brand {
+                font-size: 1rem;
+            }
+            .nav-link.dropdown-toggle {
+                font-size: 0.9rem;
+            }
+            .dropdown-menu {
+                font-size: 0.9rem;
+                min-width: 180px;
+            }
+            .sidebar-toggler {
+                padding: 0.5rem 0.7rem;
+            }
+        }
+    </style>
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Page Loading Animation -->
+    <div class="page-loading">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Sidebar Toggler Button (Mobile) -->
+    <button class="sidebar-toggler position-fixed d-lg-none" style="top: 20px; left: 20px;">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar -->
+    <div class="sidebar p-0">
+        <div class="sidebar-brand">
+            <img src="https://envysocialandco.com.au/wp-content/uploads/2025/03/Primary-Logo1-NO-BG.png" alt="MADS Logo" class="img-fluid">
+        </div>
+        <ul class="nav flex-column px-2">
+            <!-- Debug Role -->
+            <li class="nav-item">
+                <span class="nav-link">
+                    <i class="fas fa-user-shield me-2 text-blue-400"></i>
+                    Role: {{ request.session.role|capfirst|default:"Guest" }}
+                </span>
+            </li>
+            <!-- Dashboard -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                    <i class="fas fa-tachometer-alt text-green-400"></i>{% trans "Dashboard" %}
+                </a>
+            </li>
+            <!-- Reports -->
+            {% if request.session.role == 'admin' or request.session.role == 'qc' %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'current_report' %}active{% endif %}" href="{% url 'current_report' %}">
+                    <i class="fas fa-file-alt text-yellow-400"></i> {% trans "Reports" %}
+                </a>
+            </li>
+            {% endif %}
+            <!-- User Management -->
+            {% if request.session.role == 'admin' %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'user_management' %}active{% endif %}" href="{% url 'user_management' %}">
+                    <i class="fas fa-users-cog text-red-400"></i> {% trans "User Management" %}
+                </a>
+            </li>
+            {% endif %}
+            <!-- Settings -->
+            {% if request.session.role == 'admin' or request.session.role == 'qc' %}
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'setting' %}active{% endif %}" href="{% url 'setting' %}">
+                    <i class="fas fa-cog text-indigo-400"></i> {% trans "Settings" %} 
+                </a>
+            </li>
+            {% endif %}
+            <!-- Help -->
+            <li class="nav-item">
+                <a class="nav-link {% if request.resolver_match.url_name == 'help' %}active{% endif %}" href="{% url 'help' %}">
+                    <i class="fas fa-question-circle text-teal-400"></i>{% trans "Help" %}  
+                </a>
+            </li>
+            <!-- Dark Mode Toggle -->
+            <li class="nav-item">
+                <span class="nav-link theme-toggle">
+                    <i class="fas fa-moon me-2 text-gray-400"></i> {% trans "Toggle Theme" %}
+                </span>
+            </li>
+            <!-- Logout/Login -->
+            {% if request.session.uid %}
+            <li class="nav-item mt-auto">
+                <form id="logout-form" method="post" action="{% url 'logout' %}" class="px-3 pb-4">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link text-white bg-transparent border-0 w-100 text-start">
+                        <i class="fas fa-sign-out-alt text-red-400"></i> {% trans "Logout" %}
+                    </button>
+                </form>
+            </li>
+            {% else %}
+            <li class="nav-item mt-auto">
+                <a class="nav-link text-white" href="{% url 'login' %}">
+                    <i class="fas fa-sign-in-alt text-green-400"></i> {% trans "Login" %}
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <nav class="navbar navbar-expand-lg navbar-light bg-white rounded mb-4">
+            <div class="container-fluid">
+                <div class="d-flex align-items-center">
+                    <span class="navbar-brand mb-0 h1 d-none d-lg-block">
+                        <i class="fas fa-calendar-alt me-2 text-blue-400"></i>
+                        <span id="current-date-time"></span>
+                    </span>
+                </div>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto align-items-center">
+                        <li class="nav-item dropdown ms-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle me-1 text-gray-600"></i>
+                                {{ request.session.email|default:"Guest" }} ({{ request.session.role|capfirst|default:"Guest" }})
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2 text-blue-500"></i>{% trans "Profile" %}</a></li>
+                                {% if request.session.role == 'admin' or request.session.role == 'qc' %}
+                                <li><a class="dropdown-item" href="{% url 'setting' %}"><i class="fas fa-cog me-2 text-indigo-500"></i>{% trans "Settings" %}</a></li>
+                                {% endif %}
+                                <li><hr class="dropdown-divider"></li>
+                                <li>
+                                    <form method="post" action="{% url 'logout' %}">
+                                        {% csrf_token %}
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fas fa-sign-out-alt me-2 text-red-500"></i>{% trans "Logout" %}
+                                        </button>
+                                    </form>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        {% if messages %}
+        <div class="container mb-4">
+            {% for message in messages %}
+            <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        {% block content %}{% endblock %}
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Hide page loading animation
+            setTimeout(() => {
+                $('.page-loading').addClass('hidden');
+            }, 400);
+
+            // Update date and time
+            function updateDateTime() {
+                const now = new Date();
+                const options = { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    hour12: false
+                };
+                $('#current-date-time').text(now.toLocaleDateString('en-US', options));
+            }
+            setInterval(updateDateTime, 1000);
+            updateDateTime();
+
+            // Mobile sidebar toggler
+            $('.sidebar-toggler').click(function() {
+                $('.sidebar').toggleClass('active');
+            });
+
+            // Close sidebar on click outside (mobile)
+            $(document).click(function(event) {
+                if (window.innerWidth < 992) {
+                    const sidebar = $('.sidebar');
+                    const toggler = $('.sidebar-toggler');
+                    if (!sidebar.is(event.target) && !sidebar.has(event.target).length &&
+                        !toggler.is(event.target) && !toggler.has(event.target).length) {
+                        sidebar.removeClass('active');
+                    }
+                }
+            });
+
+            // Theme toggle with smooth transition
+            $('.theme-toggle').click(function() {
+                const body = $('body');
+                const icon = $(this).find('i');
+                if (body.attr('data-theme') === 'dark') {
+                    body.removeAttr('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    icon.removeClass('fa-sun text-yellow-400').addClass('fa-moon text-gray-400');
+                } else {
+                    body.attr('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    icon.removeClass('fa-moon text-gray-400').addClass('fa-sun text-yellow-400');
+                }
+            });
+
+            // Load saved theme
+            if (localStorage.getItem('theme') === 'dark') {
+                $('body').attr('data-theme', 'dark');
+                $('.theme-toggle i').removeClass('fa-moon text-gray-400').addClass('fa-sun text-yellow-400');
+            }
+
+            // Smooth dropdown animations
+            $('.dropdown').on('show.bs.dropdown', function() {
+                $(this).find('.dropdown-menu').css({
+                    'opacity': 0,
+                    'transform': 'translateY(15px)'
+                }).animate({
+                    'opacity': 1,
+                    'transform': 'translateY(0)'
+                }, 250, 'easeOutCubic');
+            });
+
+            // Initialize tooltips with custom styling
+            $('[data-bs-toggle="tooltip"]').tooltip({
+                customClass: 'tooltip-custom',
+                offset: [0, 10]
+            });
+
+            // Smooth scroll for anchor links
+            $('a.nav-link[href*="#"]').on('click', function(e) {
+                e.preventDefault();
+                const target = $(this.hash);
+                if (target.length) {
+                    $('html, body').animate({
+                        scrollTop: target.offset().top - 80
+                    }, 500, 'easeInOutQuad');
+                }
+            });
+        });
+
+        // Custom jQuery easing for smoother animations
+        $.extend($.easing, {
+            easeOutCubic: function(t) {
+                return 1 - Math.pow(1 - t, 3);
+            },
+            easeInOutQuad: function(t) {
+                return t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+            }
+        });
+    </script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,306 @@
+{% extends "base.html" %}
+{% load i18n %}
+
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(180deg, #e5e7eb 0%, #f9fafb 100%);
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #1f2937;
+        min-height: 100vh;
+    }
+    .container-fluid {
+        padding: 2rem;
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-radius: 16px;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 0.6s ease-out;
+    }
+    .card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+    }
+    .card-header {
+        border-radius: 16px 16px 0 0;
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        padding: 1.5rem;
+        color: white;
+    }
+    .list-group-item {
+        border: none;
+        padding: 1rem 1.5rem;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+        font-weight: 500;
+    }
+    .list-group-item:hover {
+        background-color: #f3f4f6;
+        transform: translateX(5px);
+    }
+    .list-group-item.active {
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        color: white;
+        font-weight: 600;
+    }
+    .content-section {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 12px;
+        padding: 1.75rem;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        animation: fadeInUp 0.5s ease-out;
+    }
+    .content-section h4 {
+        color: #1e40af;
+        font-weight: 600;
+    }
+    .alert-info {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 10px;
+        padding: 1.25rem;
+        transition: transform 0.3s ease;
+    }
+    .alert-info:hover {
+        transform: translateY(-3px);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        border: none;
+        border-radius: 10px;
+        padding: 0.75rem 1.75rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #2563eb, #3b82f6);
+        transform: translateY(-3px);
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+        .list-group-item {
+            font-size: 0.9rem;
+            padding: 0.75rem 1rem;
+        }
+        .content-section {
+            padding: 1.25rem;
+        }
+        .card-header h5 {
+            font-size: 1.2rem;
+        }
+    }
+    /* Ensure Urdu text uses Noto Nastaliq Urdu */
+    html[lang="ur"] {
+        font-family: 'Noto Nastaliq Urdu', serif;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0"><i class="fas fa-question-circle me-2"></i>{% trans "Help & Documentation" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Sidebar Navigation -->
+                        <div class="col-md-3">
+                            <div class="list-group mb-4">
+                                <a href="#getting-started" class="list-group-item list-group-item-action active">
+                                    <i class="fas fa-rocket me-2"></i>{% trans "Getting Started" %}
+                                </a>
+                                <a href="#dashboard" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-tachometer-alt me-2"></i>{% trans "Dashboard Guide" %}
+                                </a>
+                                <a href="#reports" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-file-alt me-2"></i>{% trans "Generating Reports" %}
+                                </a>
+                                <a href="#user-management" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-users-cog me-2"></i>{% trans "User Management" %}
+                                </a>
+                                <a href="#troubleshooting" class="list-group-item list-group-item-action">
+                                    <i class="fas fa-tools me-2"></i>{% trans "Troubleshooting" %}
+                                </a>
+                            </div>
+                        </div>
+                        <!-- Content Sections -->
+                        <div class="col-md-9">
+                            <div id="getting-started" class="content-section mb-5">
+                                <h4 class="mb-3">{% trans "Getting Started" %}</h4>
+                                <p>{% trans "Welcome to the Milk Adulteration Detection System (MADS). This system helps you monitor milk quality and detect adulteration using advanced sensors and machine learning." %}</p>
+                                
+                                <h5 class="mt-4">{% trans "System Requirements" %}</h5>
+                                <ul>
+                                    <li>{% trans "Modern web browser (Chrome, Firefox, Edge, or Safari)" %}</li>
+                                    <li>{% trans "Stable internet connection for real-time data updates" %}</li>
+                                    <li>{% trans "Minimum screen resolution of 1024x768" %}</li>
+                                    <li>{% trans "Firebase account for data storage (configured by admin)" %}</li>
+                                </ul>
+                                
+                                <h5 class="mt-4">{% trans "First Steps" %}</h5>
+                                <ol>
+                                    <li>{% trans "Sign up or log in using your credentials." %}</li>
+                                    <li>{% trans "Navigate to the Dashboard to view real-time sensor data." %}</li>
+                                    <li>{% trans "Upload a CSV file with sensor data to perform a milk analysis." %}</li>
+                                    <li>{% trans "Check the Reports section for detailed analysis and history." %}</li>
+                                    <li>{% trans "Configure preferences in Settings (admin/QC only)." %}</li>
+                                </ol>
+                            </div>
+                            
+                            <div id="dashboard" class="content-section mb-5">
+                                <h4 class="mb-3">{% trans "Dashboard Guide" %}</h4>
+                                <p>{% trans "The dashboard is the central hub for monitoring milk quality parameters and viewing adulteration detection results in real-time." %}</p>
+                                
+                                <div class="card mt-3">
+                                    <div class="card-header bg-light">
+                                        <h6 class="mb-0">{% trans "Key Components" %}</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul>
+                                            <li><strong>{% trans "System Overview" %}:</strong> {% trans "Displays connected sensors, pure/adulterated sample counts, and last detection time." %}</li>
+                                            <li><strong>{% trans "Live Sensor Data" %}:</strong> {% trans "Shows real-time values for parameters like pH, Temperature, and Gas, with CSV upload for additional data." %}</li>
+                                            <li><strong>{% trans "Current Milk Analysis" %}:</strong> {% trans "Presents the latest prediction with XAI insights and visual indicators." %}</li>
+                                            <li><strong>{% trans "Real-time Monitoring" %}:</strong> {% trans "Line charts tracking pH, Temperature, and Gas trends over time." %}</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="reports" class="content-section mb-5">
+                                <h4 class="mb-3">{% trans "Generating Reports" %}</h4>
+                                <p>{% trans "The Reports section allows Quality Control (QC) and Admin users to generate detailed analysis reports in PDF or CSV format." %}</p>
+                                
+                                <h5 class="mt-4">{% trans "Steps to Generate Reports" %}</h5>
+                                <ol>
+                                    <li>{% trans "Navigate to the Reports section (available to Admin/QC roles)." %}</li>
+                                    <li>{% trans "Use the filter form to select a date range or search by prediction type." %}</li>
+                                    <li>{% trans "Click 'Apply Date Filter' to update the results." %}</li>
+                                    <li>{% trans "Choose the export format (PDF or CSV) using the download buttons." %}</li>
+                                    <li>{% trans "Download the report for offline use or sharing." %}</li>
+                                </ol>
+                                
+                                <p>{% trans "PDF reports include a prediction history table, key factors, and interpretation, while CSV reports provide raw data for further analysis." %}</p>
+                            </div>
+                            
+                            <div id="user-management" class="content-section mb-5">
+                                <h4 class="mb-3">{% trans "User Management" %}</h4>
+                                <p>{% trans "Admin users can manage user accounts, including creating, editing, and deleting users, as well as assigning roles." %}</p>
+                                
+                                <h5 class="mt-4">{% trans "Managing Users" %}</h5>
+                                <ol>
+                                    <li>{% trans "Go to the User Management section (Admin only)." %}</li>
+                                    <li>{% trans "Create a new user by filling out the form with email, password, and role." %}</li>
+                                    <li>{% trans "Edit existing users by clicking the edit icon on their card." %}</li>
+                                    <li>{% trans "Delete users using the delete icon (cannot delete your own account)." %}</li>
+                                    <li>{% trans "Filter users by email, role, or status for easier management." %}</li>
+                                </ol>
+                                
+                                <p>{% trans "Available roles include Administrator (full access), Quality Control (testing/reporting), and Regular User (dashboard access)." %}</p>
+                            </div>
+                            
+                            <div id="troubleshooting" class="content-section mb-5">
+                                <h4 class="mb-3">{% trans "Troubleshooting" %}</h4>
+                                <p>{% trans "Common issues and their solutions are listed below to help you resolve problems quickly." %}</p>
+                                
+                                <h5 class="mt-4">{% trans "Common Issues" %}</h5>
+                                <ul>
+                                    <li><strong>{% trans "Login Failure" %}:</strong> {% trans "Ensure your email and password are correct. Use the 'Forgot Password' link if needed." %}</li>
+                                    <li><strong>{% trans "No Sensor Data" %}:</strong> {% trans "Check Firebase configuration and ensure sensors are connected. Verify CSV file format." %}</li>
+                                    <li><strong>{% trans "Prediction Errors" %}:</strong> {% trans "Ensure all required sensor values are provided in the CSV file and within valid ranges." %}</li>
+                                    <li><strong>{% trans "Report Generation Failure" %}:</strong> {% trans "Check date filters and ensure predictions exist in the database." %}</li>
+                                    <li><strong>{% trans "Slow Performance" %}:</strong> {% trans "Clear browser cache or try a different browser. Ensure a stable internet connection." %}</li>
+                                </ul>
+                            </div>
+                            
+                          <div class="alert alert-info">
+                            <h5><i class="fas fa-headset me-2"></i>{% trans "Need More Help?" %}</h5>
+                             <p class="mb-0">
+                              {% trans "Contact our support team at" %}
+                                <a href="mailto:rooshanfareed2@gmail.com">rooshanfareed2@gmail.com</a>
+                              {% trans "or call" %} 03284280964.
+                             </p>
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth scrolling for sidebar links
+        document.querySelectorAll('.list-group-item[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                document.querySelector(targetId).scrollIntoView({
+                    behavior: 'smooth'
+                });
+
+                // Update active class
+                document.querySelectorAll('.list-group-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.classList.add('active');
+            });
+        });
+
+        // Animate content sections on scroll
+        const sections = document.querySelectorAll('.content-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = 1;
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        sections.forEach(section => {
+            section.style.opacity = 0;
+            section.style.transform = 'translateY(20px)';
+            observer.observe(section);
+        });
+
+        // Highlight active section in sidebar based on scroll position
+        const updateActiveSection = () => {
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                if (window.scrollY >= sectionTop - 100) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            document.querySelectorAll('.list-group-item').forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === `#${current}`) {
+                    item.classList.add('active');
+                }
+            });
+        };
+
+        window.addEventListener('scroll', updateActiveSection);
+    });
+</script>
+{% endblock %}

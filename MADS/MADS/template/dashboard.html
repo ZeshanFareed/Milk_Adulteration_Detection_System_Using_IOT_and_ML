@@ -1,0 +1,737 @@
+{% extends "base.html" %}
+{% load utils_tags i18n %}
+
+{% block content %}
+<style>
+    body {
+        background-color: #f4f7fa;
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color: #343a40;
+    }
+    .container-fluid {
+        padding: 2rem;
+    }
+    .card {
+        border: none;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        animation: fadeInUp 0.5s ease-out;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+    .card-header {
+        border-radius: 12px 12px 0 0;
+        padding: 1.5rem;
+        transition: background 0.3s ease;
+    }
+    .card-header.bg-primary {
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+    }
+    .card-header.bg-secondary {
+        background: linear-gradient(135deg, #6c757d, #adb5bd);
+    }
+    .card-header.bg-warning {
+        background: linear-gradient(135deg, #ffc107, #ffea00);
+    }
+    .card-header.bg-info {
+        background: linear-gradient(135deg, #17a2b8, #00d4ff);
+    }
+    .card-body {
+        padding: 1.5rem;
+    }
+    .badge {
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .badge:hover {
+        transform: scale(1.1);
+    }
+    .btn-primary {
+        background: linear-gradient(135deg, #007bff, #00d4ff);
+        border: none;
+        border-radius: 8px;
+        padding: 0.75rem 1.5rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+        background: linear-gradient(135deg, #0056b3, #0099cc);
+        transform: translateY(-2px);
+    }
+    .table {
+        background-color: white;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .table th {
+        background-color: #e9ecef;
+        color: #343a40;
+    }
+    .sensor-value {
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+    .sensor-value.updated {
+        color: #007bff;
+        transform: scale(1.05);
+    }
+    .prediction-card.pure .card-header {
+        background: linear-gradient(135deg, #28a745, #00d4ff);
+    }
+    .prediction-card.adulterated .card-header {
+        background: linear-gradient(135deg, #dc3545, #ff6b6b);
+    }
+    #prediction-result {
+        transition: color 0.3s ease, opacity 0.3s ease;
+    }
+    #prediction-image {
+        transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    #shap-values .shap-value {
+        background: #e9ecef;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        margin: 0.25rem;
+        transition: background 0.3s ease, transform 0.2s ease;
+    }
+    #shap-values .shap-value:hover {
+        background: #007bff;
+        color: white;
+        transform: translateY(-2px);
+    }
+    .alert {
+        border-radius: 8px;
+        transition: opacity 0.3s ease;
+    }
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    @media (max-width: 768px) {
+        .container-fluid {
+            padding: 1rem;
+        }
+        .card {
+            margin-bottom: 1rem;
+        }
+        .row > div {
+            margin-bottom: 1rem;
+        }
+        .btn-primary {
+            width: 100%;
+        }
+        #csv-upload {
+            display: block;
+        }
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0"><i class="fas fa-tachometer-alt me-2"></i>{% trans "System Overview" %}</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-primary bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-microchip text-primary fs-4"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-muted">{% trans "Connected Sensors" %}</p>
+                                    <h4 class="mb-0" id="connected-sensors">{{ connected_sensors }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-success bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-check-circle text-success fs-4"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-muted">{% trans "Pure Samples" %}</p>
+                                    <h4 class="mb-0" id="pure-samples">{{ pure_samples }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-danger bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-exclamation-triangle text-danger fs-4"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-muted">{% trans "Adulterated" %}</p>
+                                    <h4 class="mb-0" id="adulterated-samples">{{ adulterated_samples }}</h4>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-6">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-info bg-opacity-10 p-3 rounded me-3">
+                                    <i class="fas fa-clock text-info fs-4"></i>
+                                </div>
+                                <div>
+                                    <p class="mb-0 text-muted">{% trans "Last Detection" %}</p>
+                                    <h4 class="mb-0" id="last-detection">{% trans "Never" %}</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sensor Data Column -->
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0"><i class="fas fa-thermometer-half me-2"></i>{% trans "Live Sensor Data" %}</h5>
+                </div>
+                <div class="card-body">
+                    <!-- File Upload Section -->
+                    <div class="mb-3">
+                        <button class="btn btn-primary w-100 mb-2" onclick="document.getElementById('csv-upload').click()">
+                            <i class="fas fa-upload me-2"></i>{% trans "Upload CSV File" %}
+                        </button>
+                        <input type="file" class="form-control" id="csv-upload" accept=".csv" style="display: none;">
+                        <small class="form-text text-muted">{% trans "Upload CSV with values in order: Fat, SNF, Gravity, Lactose, Salts, Protein, Added Water, Temperature, Freeze Point, pH, EC" %}</small>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>{% trans "Parameter" %}</th>
+                                    <th>{% trans "Value" %}</th>
+                                    <th>{% trans "Status" %}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><i class="fas fa-flask me-2"></i>{% trans "Lactose" %}</td>
+                                    <td class="sensor-value" id="lactose">--</td>
+                                    <td><span class="badge bg-secondary" id="lactose-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-weight me-2"></i>{% trans "Fat" %}</td>
+                                    <td class="sensor-value" id="fat">--</td>
+                                    <td><span class="badge bg-secondary" id="fat-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-atom me-2"></i>{% trans "SNF" %}</td>
+                                    <td class="sensor-value" id="snf">--</td>
+                                    <td><span class="badge bg-secondary" id="snf-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-dna me-2"></i>{% trans "Protein" %}</td>
+                                    <td class="sensor-value" id="protein">--</td>
+                                    <td><span class="badge bg-secondary" id="protein-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-balance-scale me-2"></i>{% trans "Gravity" %}</td>
+                                    <td class="sensor-value" id="gravity">--</td>
+                                    <td><span class="badge bg-secondary" id="gravity-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-water me-2"></i>{% trans "pH" %}</td>
+                                    <td class="sensor-value" id="ph">--</td>
+                                    <td><span class="badge bg-secondary" id="ph-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-temperature-high me-2"></i>{% trans "Temperature" %}</td>
+                                    <td class="sensor-value" id="temperature">--</td>
+                                    <td><span class="badge bg-secondary" id="temperature-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-wind me-2"></i>{% trans "Gas" %}</td>
+                                    <td class="sensor-value" id="gas">--</td>
+                                    <td><span class="badge bg-secondary" id="gas-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                                <tr>
+                                    <td><i class="fas fa-bolt me-2"></i>{% trans "EC" %}</td>
+                                    <td class="sensor-value" id="ec">--</td>
+                                    <td><span class="badge bg-secondary" id="ec-status">{% trans "Waiting" %}</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Prediction Column -->
+        <div class="col-lg-8">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card prediction-card" id="prediction-card">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0"><i class="fas fa-vial me-2"></i>{% trans "Current Milk Analysis" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-4 text-center">
+                                    <img src="https://via.placeholder.com/200x200?text=Waiting+for+Data" 
+                                         class="img-fluid rounded-circle mb-3" 
+                                         id="prediction-image"
+                                         alt="{% trans 'Milk Sample' %}">
+                                    <div>
+                                        <span class="badge bg-secondary" id="sample-timestamp">{% trans "No data yet" %}</span>
+                                    </div>
+                                </div>
+                                <div class="col-md-8">
+                                    <h2 class="mb-3 text-muted" id="prediction-result">{% trans "Waiting for data..." %}</h2>
+                                    
+                                    <div class="mb-3">
+                                        <h5><i class="fas fa-lightbulb me-2"></i>{% trans "XAI Insights" %}</h5>
+                                        <div class="d-flex flex-wrap gap-2" id="shap-values">
+                                            <span class="shap-value">{% trans "System initializing..." %}</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="alert alert-info mt-3">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <span id="prediction-explanation">
+                                            {% trans "The system is waiting for the first data sample. Analysis will begin shortly." %}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header bg-info text-white">
+                            <h5 class="mb-0"><i class="fas fa-chart-line me-2"></i>{% trans "Real-time Monitoring" %}</h5>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="liveChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+<script>
+    // Initialize Chart
+    const ctx = document.getElementById('liveChart').getContext('2d');
+    const liveChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: [],
+            datasets: [
+                {
+                    label: '{% trans "pH" %}',
+                    data: [],
+                    borderColor: 'rgba(75, 192, 10, 1)',
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2
+                },
+                {
+                    label: '{% trans "Temperature (°C)" %}',
+                    data: [],
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2
+                },
+                {
+                    label: '{% trans "Gas" %}',
+                    data: [],
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    tension: 0.1,
+                    borderWidth: 2
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            },
+            animation: {
+                duration: 1000,
+                easing: 'easeInOutQuad'
+            }
+        }
+    });
+
+    let currentCsvData = null; // Store current CSV data and prediction
+
+    // Handle CSV file upload
+    document.getElementById('csv-upload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (!file) {
+            alert('{% trans "No file selected" %}');
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('csv_file', file);
+
+        fetch("/upload_csv/", {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                alert('{% trans "Error" %}: ' + data.error);
+                return;
+            }
+            currentCsvData = data; // Store CSV data
+            updateDashboardWithCsv(data);
+            alert('{% trans "Prediction completed" %}: ' + data.prediction);
+        })
+        .catch(error => {
+            console.error('Error uploading CSV:', error);
+            alert('{% trans "Error uploading CSV file" %}');
+        });
+
+        // Reset file input
+        event.target.value = '';
+    });
+
+    // Function to get CSRF token
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    // Fetch live data (pH, Temperature, Gas only)
+    function fetchLiveData() {
+        fetch("/predict/")
+            .then(response => response.json())
+            .then(data => {
+                console.log("Live data fetched:", data);
+                if (data.firebase) {
+                    updateLiveSensors(data.firebase);
+                    updateChart(data.firebase);
+                } else {
+                    console.error("firebase data missing in response:", data);
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching live data:", error);
+            });
+    }
+
+    // Update live sensor values (pH, Temperature, Gas)
+    function updateLiveSensors(firebaseData) {
+        const pHValue = Number(firebaseData.pH);
+        const tempValue = Number(firebaseData.Temperature);
+        const gasValue = Number(firebaseData.Gas);
+
+        console.log("Raw pH from firebaseData:", firebaseData.pH, "Converted pH:", pHValue);
+
+        const updateElement = (id, value, suffix = '') => {
+            const element = document.getElementById(id);
+            element.textContent = isNaN(value) ? "--" : value.toFixed(2) + suffix;
+            if (!isNaN(value)) {
+                element.classList.add('updated');
+                setTimeout(() => element.classList.remove('updated'), 500);
+            }
+        };
+
+        updateElement("ph", pHValue);
+        updateElement("temperature", tempValue, " °C");
+        updateElement("gas", gasValue);
+        
+        const liveSensorData = {
+            pH: pHValue,
+            temperature: tempValue,
+            gas: gasValue
+        };
+        console.log("Updating live sensors with:", liveSensorData);
+        updateStatusBadges(liveSensorData, ['ph', 'temperature', 'gas']);
+
+        if (currentCsvData) {
+            const csvSensorData = {
+                lactose: Number(currentCsvData.firebase.Lactose),
+                fat: Number(currentCsvData.firebase.Fat),
+                snf: Number(currentCsvData.firebase.SNF),
+                protein: Number(currentCsvData.firebase.Protein),
+                gravity: Number(currentCsvData.firebase.Gravity),
+                ec: Number(currentCsvData.firebase.EC)
+            };
+            console.log("Updating CSV sensors with:", csvSensorData);
+            updateStatusBadges(csvSensorData, ['lactose', 'fat', 'snf', 'protein', 'gravity', 'ec']);
+        }
+    }
+
+    // Update dashboard with CSV data
+    function updateDashboardWithCsv(data) {
+        console.log("Updating dashboard with CSV data:", data); // Debug log
+
+        // Update all sensor values (CSV + live)
+        const updateElement = (id, value, suffix = '') => {
+            const element = document.getElementById(id);
+            element.textContent = Number(value).toFixed(2) + suffix;
+            element.classList.add('updated');
+            setTimeout(() => element.classList.remove('updated'), 500);
+        };
+
+        updateElement("lactose", data.firebase.Lactose);
+        updateElement("fat", data.firebase.Fat);
+        updateElement("snf", data.firebase.SNF);
+        updateElement("protein", data.firebase.Protein);
+        updateElement("gravity", data.firebase.Gravity);
+        updateElement("ph", data.firebase.pH);
+        updateElement("temperature", data.firebase.Temperature, " °C");
+        updateElement("gas", data.firebase.Gas);
+        updateElement("ec", data.firebase.EC);
+        
+        // Update status badges for all sensors
+        const allSensorData = {
+            lactose: Number(data.firebase.Lactose),
+            fat: Number(data.firebase.Fat),
+            snf: Number(data.firebase.SNF),
+            protein: Number(data.firebase.Protein),
+            gravity: Number(data.firebase.Gravity),
+            pH: Number(data.firebase.pH),
+            temperature: Number(data.firebase.Temperature),
+            gas: Number(data.firebase.Gas),
+            ec: Number(data.firebase.EC)
+        };
+        console.log("Updating all sensors with:", allSensorData);
+        updateStatusBadges(allSensorData);
+        
+        // Update prediction result
+        const predictionResult = document.getElementById("prediction-result");
+        predictionResult.textContent = data.prediction || "{% trans 'Unknown prediction' %}";
+        console.log("Setting prediction result to:", data.prediction); // Debug log
+        predictionResult.style.opacity = 0;
+        setTimeout(() => {
+            predictionResult.style.opacity = 1;
+        }, 100);
+        
+        // Update card styling based on prediction
+        const predictionCard = document.getElementById("prediction-card");
+        if (data.prediction === "Pure Milk") {
+            predictionCard.classList.remove("adulterated");
+            predictionCard.classList.add("pure");
+            predictionResult.className = "mb-3 text-success";
+        } else {
+            predictionCard.classList.remove("pure");
+            predictionCard.classList.add("adulterated");
+            predictionResult.className = "mb-3 text-danger";
+        }
+        
+        // Update prediction image based on adulteration type
+        const predictionImage = document.getElementById("prediction-image");
+        predictionImage.style.opacity = 0;
+        setTimeout(() => {
+            if (data.prediction === "Pure Milk") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/pure.jpeg?raw=true";
+            } else if (data.prediction === "Urea Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/urea.jpeg?raw=true";
+            } else if (data.prediction === "Starch Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/starch.jpeg?raw=true";
+            } else if (data.prediction === "Sodium Bicarbonate Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/sod.jpeg?raw=true";
+            } else if (data.prediction === "Maltodextrin Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/malt.jpeg?raw=true";
+            } else if (data.prediction === "Formaldehyde Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/form.jpeg?raw=true";
+            } else if (data.prediction === "Water Adulteration") {
+                predictionImage.src = "https://github.com/ZeshanFareed/Bootstrap/blob/main/Gemini_Generated_Image_49zevp49zevp49ze.jpeg?raw=true";
+            }
+            predictionImage.style.opacity = 1;
+            predictionImage.style.transform = 'scale(1)';
+        }, 300);
+        
+        // Update timestamp
+        const timestamp = data.timestamp || new Date().toLocaleString();
+        document.getElementById("sample-timestamp").textContent = timestamp;
+        document.getElementById("last-detection").textContent = "{% trans 'Just now' %}";
+        
+        // Update XAI insights
+        const shapContainer = document.getElementById("shap-values");
+        shapContainer.innerHTML = '';
+        if (data.shap_values && typeof data.shap_values === 'object' && Object.keys(data.shap_values).length > 0) {
+            const sortedShap = Object.entries(data.shap_values)
+                .sort((a, b) => Math.abs(b[1]) - Math.abs(a[1]));
+            
+            sortedShap.slice(0, 5).forEach(([key, value]) => {
+                const shapElement = document.createElement("span");
+                shapElement.className = "shap-value";
+                shapElement.textContent = `${key}: ${value.toFixed(2)}`;
+                shapElement.style.opacity = 0;
+                shapContainer.appendChild(shapElement);
+                setTimeout(() => {
+                    shapElement.style.opacity = 1;
+                    shapElement.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        } else {
+            console.error("Invalid or empty shap_values:", data.shap_values);
+            shapContainer.innerHTML = '<span class="shap-value">{% trans "No feature importance data available" %}</span>';
+        }
+        
+        // Update explanation
+        const explanation = document.getElementById("prediction-explanation");
+        explanation.style.opacity = 0;
+        setTimeout(() => {
+            if (data.prediction === "Pure Milk") {
+                explanation.textContent = "{% trans 'This sample meets all quality standards for pure milk.' %}";
+            } else if (data.prediction === "Urea Adulteration") {
+                explanation.textContent = "{% trans 'Urea detected in milk. Urea is added to increase the apparent protein content.' %}";
+            } else if (data.prediction === "Starch Adulteration") {
+                explanation.textContent = "{% trans 'Starch detected in milk. Starch is added to increase viscosity and density.' %}";
+            } else if (data.prediction === "Sodium Bicarbonate Adulteration") {
+                explanation.textContent = "{% trans 'Sodium bicarbonate detected. Used to neutralize acidity in spoiled milk.' %}";
+            } else if (data.prediction === "Maltodextrin Adulteration") {
+                explanation.textContent = "{% trans 'Maltodextrin detected in milk. Used to artificially increase solid content and density.' %}";
+            } else if (data.prediction === "Formaldehyde Adulteration") {
+                explanation.textContent = "{% trans 'Formaldehyde detected. A dangerous preservative added to extend shelf life.' %}";
+            } else if (data.prediction === "Water Adulteration") {
+                explanation.textContent = "{% trans 'Excessive water content detected. Milk has been diluted to increase volume.' %}";
+            } else {
+                explanation.textContent = "{% trans 'The system is analyzing the milk sample.' %}";
+            }
+            explanation.style.opacity = 1;
+        }, 100);
+        
+        // Update sample counters
+        if (data.prediction === "Pure Milk") {
+            const pureSamples = document.getElementById("pure-samples");
+            pureSamples.textContent = parseInt(pureSamples.textContent) + 1;
+        } else if (data.prediction !== "Analyzing..." && data.prediction !== "Waiting for data...") {
+            const adulteratedSamples = document.getElementById("adulterated-samples");
+            adulteratedSamples.textContent = parseInt(adulteratedSamples.textContent) + 1;
+        }
+    }
+
+    // Update chart with live data
+    function updateChart(firebaseData) {
+        const now = new Date().toLocaleTimeString();
+        liveChart.data.labels.push(now);
+        if (liveChart.data.labels.length > 15) {
+            liveChart.data.labels.shift();
+        }
+        
+        const pHValue = Number(firebaseData.pH);
+        const tempValue = Number(firebaseData.Temperature);
+        const gasValue = Number(firebaseData.Gas);
+
+        liveChart.data.datasets[0].data.push(isNaN(pHValue) ? 0 : pHValue);
+        if (liveChart.data.datasets[0].data.length > 15) {
+            liveChart.data.datasets[0].data.shift();
+        }
+        
+        liveChart.data.datasets[1].data.push(isNaN(tempValue) ? 0 : tempValue);
+        if (liveChart.data.datasets[1].data.length > 15) {
+            liveChart.data.datasets[1].data.shift();
+        }
+        
+        liveChart.data.datasets[2].data.push(isNaN(gasValue) ? 0 : gasValue);
+        if (liveChart.data.datasets[2].data.length > 15) {
+            liveChart.data.datasets[2].data.shift();
+        }
+        
+        liveChart.update();
+    }
+
+    function updateStatusBadges(sensorData, keys = null) {
+        const statusElements = {
+            lactose: { element: "lactose-status", min: 0, max: 5.59 },
+            fat: { element: "fat-status", min: 0, max: 5.40 },
+            snf: { element: "snf-status", min: 0, max: 9.50 },
+            protein: { element: "protein-status", min: 0, max: 5.8 },
+            gravity: { element: "gravity-status", min: 0, max: 30 },
+            ph: { element: "ph-status", min: 6, max: 7.25 },
+            temperature: { element: "temperature-status", min: 15, max: 34},
+            gas: { element: "gas-status", min: 75, max: 150 },
+            ec: { element: "ec-status", min: 2.0, max: 6 }
+        };
+
+        const updateKeys = keys || Object.keys(statusElements);
+        for (const key of updateKeys) {
+            const config = statusElements[key];
+            const dataKey = key === 'ph' ? 'pH' : key;
+            let value = sensorData[dataKey];
+            
+            if (typeof value === 'string') {
+                value = parseFloat(value);
+            }
+
+            console.log(`Processing ${key} (dataKey: ${dataKey}): value=${value}, type=${typeof value}`);
+
+            const element = document.getElementById(config.element);
+            if (value === undefined || value === null || isNaN(value)) {
+                console.log(`${key} is invalid (undefined/null/NaN), setting to Waiting`);
+                element.className = "badge bg-secondary";
+                element.textContent = "{% trans 'Waiting' %}";
+                continue;
+            }
+
+            console.log(`${key}: value=${value}, min=${config.min}, max=${config.max}`);
+            if (value < config.min || value > config.max) {
+                element.className = "badge bg-danger";
+                element.textContent = "{% trans 'Alert' %}";
+            } else {
+                element.className = "badge bg-success";
+                element.textContent = "{% trans 'Normal' %}";
+            }
+        }
+    }
+
+    // Initialize live updates every 5 seconds
+    fetchLiveData();
+    setInterval(fetchLiveData, 5000);
+
+    // Restore CSV data if available (e.g., on page refresh)
+    if (currentCsvData) {
+        updateDashboardWithCsv(currentCsvData);
+    }
+</script>
+{% endblock %}

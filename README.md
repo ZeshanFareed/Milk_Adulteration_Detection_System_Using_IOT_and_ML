@@ -53,6 +53,8 @@ Supports Pakistan’s dairy industry with a multilingual interface and real-time
 ![help1 form Output](images/help1.png)
 # **Help Form Page** 
 ![help2 form Output](images/help2.png)
+# **Setting Form Change in Urdu Page** 
+![urdu form Output](images/setting in urdu.png)
 
 
 

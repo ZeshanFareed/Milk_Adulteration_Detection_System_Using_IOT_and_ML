@@ -30,3 +30,21 @@ Achieves 95% accuracy in detecting five common milk adulterants, validated on a 
 Overcomes hardware limitations (e.g., RS232 garbage values) by implementing a USB-based CSV upload solution with Pandas preprocessing.
 Provides a scalable framework for dairy quality assurance, with potential for mobile app development and expanded adulterant detection (e.g., melamine, detergents).
 Supports Pakistan’s dairy industry with a multilingual interface and real-time insights, fostering consumer safety and industry trust.
+
+
+
+
+![Login form Output](C:/Users/PMLS/Desktop/Final Year Project/login.png)
+![Signup form Output](C:/Users/PMLS/Desktop/Final Year Project/sign.png)
+![Base form Output](C:/Users/PMLS/Desktop/Final Year Project/base.png)
+![Dashbaord form Output](C:/Users/PMLS/Desktop/Final Year Project/dashboard.png)
+![Reports form Output](C:/Users/PMLS/Desktop/Final Year Project/reports.png)
+![User1 form Output](C:/Users/PMLS/Desktop/Final Year Project/user1.png)
+![User2 form Output](C:/Users/PMLS/Desktop/Final Year Project/user2.png)
+![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
+![help1 form Output](C:/Users/PMLS/Desktop/Final Year Project/help1.png)
+![help2 form Output](C:/Users/PMLS/Desktop/Final Year Project/help2.png)
+![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
+![setting form Output](C:/Users/PMLS/Desktop/Final Year Project/setting.png)
+
+
